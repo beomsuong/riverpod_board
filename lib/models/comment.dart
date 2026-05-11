@@ -1,13 +1,13 @@
-class Comment {
-  const Comment({
-    required this.id,
-    required this.authorId,
-    required this.content,
-    required this.createdAt,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final String id;
-  final String authorId;
-  final String content;
-  final DateTime createdAt;
+part 'comment.freezed.dart';
+
+@freezed
+class Comment with _$Comment {
+  const factory Comment({
+    required String id,
+    required String authorId,
+    required String content,
+    required DateTime createdAt,
+  }) = _Comment;
 }

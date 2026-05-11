@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class User {
-  const User({
-    required this.id,
-    required this.name,
-    required this.bio,
-    required this.avatarColor,
-  });
+part 'user.freezed.dart';
 
-  final String id;
-  final String name;
-  final String bio;
-  final Color avatarColor;
+@freezed
+class User with _$User {
+  const factory User({
+    required String id,
+    required String name,
+    required String bio,
+    required Color avatarColor,
+  }) = _User;
+
+  const User._();
 
   String get avatarInitial => name[0];
 }

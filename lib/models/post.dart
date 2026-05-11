@@ -1,39 +1,23 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'comment.dart';
 
-class Post {
-  const Post({
-    required this.id,
-    required this.authorId,
-    required this.title,
-    required this.content,
-    required this.createdAt,
-    this.likedUserIds = const [],
-    this.comments = const [],
-  });
+part 'post.freezed.dart';
 
-  final String id;
-  final String authorId;
-  final String title;
-  final String content;
-  final DateTime createdAt;
-  final List<String> likedUserIds;
-  final List<Comment> comments;
+@freezed
+class Post with _$Post {
+  const factory Post({
+    required String id,
+    required String authorId,
+    required String title,
+    required String content,
+    required DateTime createdAt,
+    @Default([]) List<String> likedUserIds,
+    @Default([]) List<Comment> comments,
+  }) = _Post;
+
+  const Post._();
 
   int get likeCount => likedUserIds.length;
   int get commentCount => comments.length;
-
-  Post copyWith({
-    List<String>? likedUserIds,
-    List<Comment>? comments,
-  }) {
-    return Post(
-      id: id,
-      authorId: authorId,
-      title: title,
-      content: content,
-      createdAt: createdAt,
-      likedUserIds: likedUserIds ?? this.likedUserIds,
-      comments: comments ?? this.comments,
-    );
-  }
 }

@@ -339,11 +339,416 @@ class _PostsByAuthorProviderElement
   String get authorId => (origin as PostsByAuthorProvider).authorId;
 }
 
-String _$boardNotifierHash() => r'6e895e842e4a333efdb33d1f29acaa2d7d7805da';
+String _$commentByIdHash() => r'413c464237f729dc0ec0f4926d2a78737d70a0c9';
 
-/// 모든 게시글의 단일 상태관리자.
-/// 본문은 Map<id, Post>로 정규화 저장하고, 정렬·작성자별 인덱스를 별도로 둔다.
-/// addPost/toggleLike/addComment 모두 O(1) 본질 작업.
+/// 특정 댓글만 구독.
+///
+/// Copied from [commentById].
+@ProviderFor(commentById)
+const commentByIdProvider = CommentByIdFamily();
+
+/// 특정 댓글만 구독.
+///
+/// Copied from [commentById].
+class CommentByIdFamily extends Family<Comment?> {
+  /// 특정 댓글만 구독.
+  ///
+  /// Copied from [commentById].
+  const CommentByIdFamily();
+
+  /// 특정 댓글만 구독.
+  ///
+  /// Copied from [commentById].
+  CommentByIdProvider call(String commentId) {
+    return CommentByIdProvider(commentId);
+  }
+
+  @override
+  CommentByIdProvider getProviderOverride(
+    covariant CommentByIdProvider provider,
+  ) {
+    return call(provider.commentId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'commentByIdProvider';
+}
+
+/// 특정 댓글만 구독.
+///
+/// Copied from [commentById].
+class CommentByIdProvider extends AutoDisposeProvider<Comment?> {
+  /// 특정 댓글만 구독.
+  ///
+  /// Copied from [commentById].
+  CommentByIdProvider(String commentId)
+    : this._internal(
+        (ref) => commentById(ref as CommentByIdRef, commentId),
+        from: commentByIdProvider,
+        name: r'commentByIdProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$commentByIdHash,
+        dependencies: CommentByIdFamily._dependencies,
+        allTransitiveDependencies: CommentByIdFamily._allTransitiveDependencies,
+        commentId: commentId,
+      );
+
+  CommentByIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.commentId,
+  }) : super.internal();
+
+  final String commentId;
+
+  @override
+  Override overrideWith(Comment? Function(CommentByIdRef provider) create) {
+    return ProviderOverride(
+      origin: this,
+      override: CommentByIdProvider._internal(
+        (ref) => create(ref as CommentByIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        commentId: commentId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<Comment?> createElement() {
+    return _CommentByIdProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CommentByIdProvider && other.commentId == commentId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, commentId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin CommentByIdRef on AutoDisposeProviderRef<Comment?> {
+  /// The parameter `commentId` of this provider.
+  String get commentId;
+}
+
+class _CommentByIdProviderElement extends AutoDisposeProviderElement<Comment?>
+    with CommentByIdRef {
+  _CommentByIdProviderElement(super.provider);
+
+  @override
+  String get commentId => (origin as CommentByIdProvider).commentId;
+}
+
+String _$commentsByPostHash() => r'2f17076c66106e208509632283d9e796d8844dc6';
+
+/// 특정 글의 댓글 목록.
+/// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
+///
+/// Copied from [commentsByPost].
+@ProviderFor(commentsByPost)
+const commentsByPostProvider = CommentsByPostFamily();
+
+/// 특정 글의 댓글 목록.
+/// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
+///
+/// Copied from [commentsByPost].
+class CommentsByPostFamily extends Family<List<Comment>> {
+  /// 특정 글의 댓글 목록.
+  /// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
+  ///
+  /// Copied from [commentsByPost].
+  const CommentsByPostFamily();
+
+  /// 특정 글의 댓글 목록.
+  /// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
+  ///
+  /// Copied from [commentsByPost].
+  CommentsByPostProvider call(String postId) {
+    return CommentsByPostProvider(postId);
+  }
+
+  @override
+  CommentsByPostProvider getProviderOverride(
+    covariant CommentsByPostProvider provider,
+  ) {
+    return call(provider.postId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'commentsByPostProvider';
+}
+
+/// 특정 글의 댓글 목록.
+/// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
+///
+/// Copied from [commentsByPost].
+class CommentsByPostProvider extends AutoDisposeProvider<List<Comment>> {
+  /// 특정 글의 댓글 목록.
+  /// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
+  ///
+  /// Copied from [commentsByPost].
+  CommentsByPostProvider(String postId)
+    : this._internal(
+        (ref) => commentsByPost(ref as CommentsByPostRef, postId),
+        from: commentsByPostProvider,
+        name: r'commentsByPostProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$commentsByPostHash,
+        dependencies: CommentsByPostFamily._dependencies,
+        allTransitiveDependencies:
+            CommentsByPostFamily._allTransitiveDependencies,
+        postId: postId,
+      );
+
+  CommentsByPostProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.postId,
+  }) : super.internal();
+
+  final String postId;
+
+  @override
+  Override overrideWith(
+    List<Comment> Function(CommentsByPostRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: CommentsByPostProvider._internal(
+        (ref) => create(ref as CommentsByPostRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        postId: postId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<List<Comment>> createElement() {
+    return _CommentsByPostProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CommentsByPostProvider && other.postId == postId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, postId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin CommentsByPostRef on AutoDisposeProviderRef<List<Comment>> {
+  /// The parameter `postId` of this provider.
+  String get postId;
+}
+
+class _CommentsByPostProviderElement
+    extends AutoDisposeProviderElement<List<Comment>>
+    with CommentsByPostRef {
+  _CommentsByPostProviderElement(super.provider);
+
+  @override
+  String get postId => (origin as CommentsByPostProvider).postId;
+}
+
+String _$commentCountByPostHash() =>
+    r'3ce583d29c784abac87a3543e5b45ebf1a4c56e7';
+
+/// 특정 글의 댓글 수.
+/// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
+///
+/// Copied from [commentCountByPost].
+@ProviderFor(commentCountByPost)
+const commentCountByPostProvider = CommentCountByPostFamily();
+
+/// 특정 글의 댓글 수.
+/// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
+///
+/// Copied from [commentCountByPost].
+class CommentCountByPostFamily extends Family<int> {
+  /// 특정 글의 댓글 수.
+  /// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
+  ///
+  /// Copied from [commentCountByPost].
+  const CommentCountByPostFamily();
+
+  /// 특정 글의 댓글 수.
+  /// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
+  ///
+  /// Copied from [commentCountByPost].
+  CommentCountByPostProvider call(String postId) {
+    return CommentCountByPostProvider(postId);
+  }
+
+  @override
+  CommentCountByPostProvider getProviderOverride(
+    covariant CommentCountByPostProvider provider,
+  ) {
+    return call(provider.postId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'commentCountByPostProvider';
+}
+
+/// 특정 글의 댓글 수.
+/// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
+///
+/// Copied from [commentCountByPost].
+class CommentCountByPostProvider extends AutoDisposeProvider<int> {
+  /// 특정 글의 댓글 수.
+  /// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
+  ///
+  /// Copied from [commentCountByPost].
+  CommentCountByPostProvider(String postId)
+    : this._internal(
+        (ref) => commentCountByPost(ref as CommentCountByPostRef, postId),
+        from: commentCountByPostProvider,
+        name: r'commentCountByPostProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$commentCountByPostHash,
+        dependencies: CommentCountByPostFamily._dependencies,
+        allTransitiveDependencies:
+            CommentCountByPostFamily._allTransitiveDependencies,
+        postId: postId,
+      );
+
+  CommentCountByPostProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.postId,
+  }) : super.internal();
+
+  final String postId;
+
+  @override
+  Override overrideWith(int Function(CommentCountByPostRef provider) create) {
+    return ProviderOverride(
+      origin: this,
+      override: CommentCountByPostProvider._internal(
+        (ref) => create(ref as CommentCountByPostRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        postId: postId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<int> createElement() {
+    return _CommentCountByPostProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CommentCountByPostProvider && other.postId == postId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, postId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin CommentCountByPostRef on AutoDisposeProviderRef<int> {
+  /// The parameter `postId` of this provider.
+  String get postId;
+}
+
+class _CommentCountByPostProviderElement extends AutoDisposeProviderElement<int>
+    with CommentCountByPostRef {
+  _CommentCountByPostProviderElement(super.provider);
+
+  @override
+  String get postId => (origin as CommentCountByPostProvider).postId;
+}
+
+String _$boardNotifierHash() => r'9bb97b4801be7f1968b25dcd6fdda61f71ad1fcd';
+
+/// 모든 게시글·댓글의 단일 상태관리자.
+/// 본문은 `Map<id, Post>` / `Map<id, Comment>` 로 정규화 저장하고,
+/// 정렬·작성자별·글별 인덱스를 별도로 둔다.
 ///
 /// Copied from [BoardNotifier].
 @ProviderFor(BoardNotifier)

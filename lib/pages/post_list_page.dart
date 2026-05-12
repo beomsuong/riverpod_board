@@ -46,10 +46,12 @@ class _PostListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final post = ref.watch(postByIdProvider(postId));
     final users = ref.watch(usersMapProvider);
+    final commentCount = ref.watch(commentCountByPostProvider(postId));
     if (post == null) return const SizedBox.shrink();
     return PostCard(
       post: post,
       author: users[post.authorId],
+      commentCount: commentCount,
       onTap: () => context.push('/post/$postId'),
     );
   }

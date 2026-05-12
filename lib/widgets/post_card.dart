@@ -11,11 +11,13 @@ class PostCard extends StatelessWidget {
     super.key,
     required this.post,
     required this.author,
+    required this.commentCount,
     required this.onTap,
   });
 
   final Post post;
   final User? author;
+  final int commentCount;
   final VoidCallback onTap;
 
   @override
@@ -78,7 +80,7 @@ class PostCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 _MetaChip(
                   icon: Icons.mode_comment_outlined,
-                  label: '${post.commentCount}',
+                  label: '$commentCount',
                 ),
               ],
             ),

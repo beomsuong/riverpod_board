@@ -6,6 +6,7 @@ part 'comment.freezed.dart';
 class Comment with _$Comment {
   const factory Comment({
     required String id,
+    required String postId,
     required String authorId,
     required String content,
     required DateTime createdAt,

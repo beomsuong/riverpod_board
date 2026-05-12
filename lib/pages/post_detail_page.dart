@@ -39,6 +39,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
   Widget build(BuildContext context) {
     final post = ref.watch(postByIdProvider(widget.postId));
     final users = ref.watch(usersMapProvider);
+    final comments = ref.watch(commentsByPostProvider(widget.postId));
 
     if (post == null) {
       return Scaffold(
@@ -136,7 +137,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                     const SizedBox(width: 8),
                     _ActionButton(
                       icon: Icons.mode_comment_outlined,
-                      label: '${post.commentCount}',
+                      label: '${comments.length}',
                       color: cs.outline,
                       onTap: () => _focusNode.requestFocus(),
                     ),
@@ -148,12 +149,12 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
 
                 // 댓글 목록
                 Text(
-                  '댓글 ${post.commentCount}개',
+                  '댓글 ${comments.length}개',
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                if (post.comments.isEmpty)
+                if (comments.isEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24),
                     child: Center(
@@ -166,7 +167,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                     ),
                   )
                 else
-                  ...post.comments.map(
+                  ...comments.map(
                     (comment) => CommentItem(
                       comment: comment,
                       author: users[comment.authorId],

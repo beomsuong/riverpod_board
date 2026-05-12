@@ -119,10 +119,17 @@ class AuthorProfilePage extends ConsumerWidget {
               separatorBuilder: (_, __) => const Divider(),
               itemBuilder: (context, index) {
                 final post = authorPosts[index];
-                return PostCard(
-                  post: post,
-                  author: author,
-                  onTap: () => context.push('/post/${post.id}'),
+                return Consumer(
+                  builder: (context, ref, _) {
+                    final commentCount =
+                        ref.watch(commentCountByPostProvider(post.id));
+                    return PostCard(
+                      post: post,
+                      author: author,
+                      commentCount: commentCount,
+                      onTap: () => context.push('/post/${post.id}'),
+                    );
+                  },
                 );
               },
             ),

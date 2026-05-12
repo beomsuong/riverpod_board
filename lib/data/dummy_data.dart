@@ -49,20 +49,6 @@ final List<Post> dummyPosts = [
         '이번 글에서는 실전 예제를 통해 riverpod_generator의 주요 사용법을 정리해보겠습니다.',
     createdAt: DateTime(2025, 5, 1, 9, 0),
     likedUserIds: ['user_2', 'user_3', 'user_4'],
-    comments: [
-      Comment(
-        id: 'comment_1',
-        authorId: 'user_2',
-        content: '정말 기대되는 업데이트네요! 코드 생성이 간편해진다니 좋겠습니다.',
-        createdAt: DateTime(2025, 5, 1, 10, 30),
-      ),
-      Comment(
-        id: 'comment_2',
-        authorId: 'user_3',
-        content: '저도 riverpod_generator 써봤는데 확실히 편하더라고요.',
-        createdAt: DateTime(2025, 5, 1, 11, 0),
-      ),
-    ],
   ),
   Post(
     id: 'post_2',
@@ -75,14 +61,6 @@ final List<Post> dummyPosts = [
         '이번 글에서는 가장 자주 사용하는 애니메이션 패턴들을 소개합니다.',
     createdAt: DateTime(2025, 5, 2, 14, 0),
     likedUserIds: ['user_1', 'user_5'],
-    comments: [
-      Comment(
-        id: 'comment_3',
-        authorId: 'user_4',
-        content: 'Lottie 패키지 정말 유용하죠! 저도 자주 씁니다.',
-        createdAt: DateTime(2025, 5, 2, 15, 0),
-      ),
-    ],
   ),
   Post(
     id: 'post_3',
@@ -95,26 +73,6 @@ final List<Post> dummyPosts = [
         '특히 미들웨어 설정과 에러 핸들링에 집중해서 실무에서 바로 쓸 수 있는 코드를 작성해보겠습니다.',
     createdAt: DateTime(2025, 5, 3, 10, 0),
     likedUserIds: ['user_1', 'user_2', 'user_4', 'user_5'],
-    comments: [
-      Comment(
-        id: 'comment_4',
-        authorId: 'user_1',
-        content: 'Go의 성능은 정말 놀랍죠. 특히 동시성 처리가 뛰어납니다.',
-        createdAt: DateTime(2025, 5, 3, 11, 0),
-      ),
-      Comment(
-        id: 'comment_5',
-        authorId: 'user_5',
-        content: 'Gin 말고 Echo 프레임워크도 추천드립니다!',
-        createdAt: DateTime(2025, 5, 3, 12, 0),
-      ),
-      Comment(
-        id: 'comment_6',
-        authorId: 'user_2',
-        content: '잘 읽었습니다. 다음 편도 기대됩니다!',
-        createdAt: DateTime(2025, 5, 3, 13, 0),
-      ),
-    ],
   ),
   Post(
     id: 'post_4',
@@ -127,7 +85,6 @@ final List<Post> dummyPosts = [
         'Riverpod과 함께 사용하면 더욱 강력한 라우팅 시스템을 구성할 수 있습니다.',
     createdAt: DateTime(2025, 5, 4, 9, 30),
     likedUserIds: ['user_1', 'user_3'],
-    comments: [],
   ),
   Post(
     id: 'post_5',
@@ -140,14 +97,6 @@ final List<Post> dummyPosts = [
         'Flutter는 이 두 가지를 모두 지원하는 강력한 프레임워크로, 하나의 코드베이스로 모바일·웹·데스크톱 앱을 만들 수 있습니다.',
     createdAt: DateTime(2025, 5, 5, 16, 0),
     likedUserIds: ['user_2', 'user_4'],
-    comments: [
-      Comment(
-        id: 'comment_7',
-        authorId: 'user_1',
-        content: 'Flutter로 웹과 앱을 동시에 개발할 수 있어서 정말 편리합니다.',
-        createdAt: DateTime(2025, 5, 5, 17, 0),
-      ),
-    ],
   ),
   Post(
     id: 'post_6',
@@ -160,14 +109,6 @@ final List<Post> dummyPosts = [
         '이를 잘 활용하면 더 안전하고 견고한 코드를 작성할 수 있습니다.',
     createdAt: DateTime(2025, 5, 6, 11, 0),
     likedUserIds: ['user_3', 'user_5'],
-    comments: [
-      Comment(
-        id: 'comment_8',
-        authorId: 'user_4',
-        content: 'null 안전성 덕분에 런타임 에러가 많이 줄었어요!',
-        createdAt: DateTime(2025, 5, 6, 12, 0),
-      ),
-    ],
   ),
   Post(
     id: 'post_7',
@@ -181,20 +122,6 @@ final List<Post> dummyPosts = [
         '일곱째, 항상 사용자 중심으로 생각하세요.',
     createdAt: DateTime(2025, 5, 7, 13, 0),
     likedUserIds: ['user_1', 'user_3', 'user_4', 'user_5'],
-    comments: [
-      Comment(
-        id: 'comment_9',
-        authorId: 'user_3',
-        content: '접근성 부분이 특히 중요한 것 같아요. 자주 놓치는 부분이죠.',
-        createdAt: DateTime(2025, 5, 7, 14, 0),
-      ),
-      Comment(
-        id: 'comment_10',
-        authorId: 'user_5',
-        content: '디자인 시스템을 구축하면 일관성 유지가 훨씬 쉬워집니다!',
-        createdAt: DateTime(2025, 5, 7, 15, 0),
-      ),
-    ],
   ),
   Post(
     id: 'post_8',
@@ -207,7 +134,6 @@ final List<Post> dummyPosts = [
         '또한 CI/CD 파이프라인에 Docker를 통합하는 방법도 다루겠습니다.',
     createdAt: DateTime(2025, 5, 8, 10, 0),
     likedUserIds: ['user_1'],
-    comments: [],
   ),
   Post(
     id: 'post_9',
@@ -221,14 +147,6 @@ final List<Post> dummyPosts = [
         '프로젝트 규모와 팀 상황에 맞는 선택이 중요합니다.',
     createdAt: DateTime(2025, 5, 9, 15, 0),
     likedUserIds: ['user_2', 'user_3', 'user_5'],
-    comments: [
-      Comment(
-        id: 'comment_11',
-        authorId: 'user_1',
-        content: '저는 Riverpod을 가장 선호합니다. 타입 안전성이 정말 마음에 들어요.',
-        createdAt: DateTime(2025, 5, 9, 16, 0),
-      ),
-    ],
   ),
   Post(
     id: 'post_10',
@@ -241,20 +159,6 @@ final List<Post> dummyPosts = [
         'Riverpod과 함께 사용하면 의존성 주입도 깔끔하게 처리할 수 있습니다.',
     createdAt: DateTime(2025, 5, 10, 9, 0),
     likedUserIds: ['user_1', 'user_2', 'user_3', 'user_4'],
-    comments: [
-      Comment(
-        id: 'comment_12',
-        authorId: 'user_2',
-        content: '클린 아키텍처에 Riverpod을 조합하면 정말 강력한 구조가 됩니다.',
-        createdAt: DateTime(2025, 5, 10, 10, 0),
-      ),
-      Comment(
-        id: 'comment_13',
-        authorId: 'user_4',
-        content: '작은 프로젝트에서는 오버엔지니어링이 될 수 있어서 잘 판단해야 할 것 같아요.',
-        createdAt: DateTime(2025, 5, 10, 11, 0),
-      ),
-    ],
   ),
   Post(
     id: 'post_11',
@@ -267,7 +171,6 @@ final List<Post> dummyPosts = [
         'DevTools의 성능 탭을 통해 jank를 찾아내고 최적화하는 방법도 알아보겠습니다.',
     createdAt: DateTime(2025, 5, 11, 8, 0),
     likedUserIds: ['user_3', 'user_4'],
-    comments: [],
   ),
   Post(
     id: 'post_12',
@@ -280,13 +183,106 @@ final List<Post> dummyPosts = [
         'Firestore의 실시간 스트림을 Riverpod StreamProvider와 결합하면 실시간 동기화 앱을 쉽게 만들 수 있습니다.',
     createdAt: DateTime(2025, 5, 11, 14, 0),
     likedUserIds: ['user_2', 'user_5'],
-    comments: [
-      Comment(
-        id: 'comment_14',
-        authorId: 'user_1',
-        content: 'Firestore 실시간 업데이트 기능이 정말 강력하죠!',
-        createdAt: DateTime(2025, 5, 11, 15, 0),
-      ),
-    ],
+  ),
+];
+
+final List<Comment> dummyComments = [
+  Comment(
+    id: 'comment_1',
+    postId: 'post_1',
+    authorId: 'user_2',
+    content: '정말 기대되는 업데이트네요! 코드 생성이 간편해진다니 좋겠습니다.',
+    createdAt: DateTime(2025, 5, 1, 10, 30),
+  ),
+  Comment(
+    id: 'comment_2',
+    postId: 'post_1',
+    authorId: 'user_3',
+    content: '저도 riverpod_generator 써봤는데 확실히 편하더라고요.',
+    createdAt: DateTime(2025, 5, 1, 11, 0),
+  ),
+  Comment(
+    id: 'comment_3',
+    postId: 'post_2',
+    authorId: 'user_4',
+    content: 'Lottie 패키지 정말 유용하죠! 저도 자주 씁니다.',
+    createdAt: DateTime(2025, 5, 2, 15, 0),
+  ),
+  Comment(
+    id: 'comment_4',
+    postId: 'post_3',
+    authorId: 'user_1',
+    content: 'Go의 성능은 정말 놀랍죠. 특히 동시성 처리가 뛰어납니다.',
+    createdAt: DateTime(2025, 5, 3, 11, 0),
+  ),
+  Comment(
+    id: 'comment_5',
+    postId: 'post_3',
+    authorId: 'user_5',
+    content: 'Gin 말고 Echo 프레임워크도 추천드립니다!',
+    createdAt: DateTime(2025, 5, 3, 12, 0),
+  ),
+  Comment(
+    id: 'comment_6',
+    postId: 'post_3',
+    authorId: 'user_2',
+    content: '잘 읽었습니다. 다음 편도 기대됩니다!',
+    createdAt: DateTime(2025, 5, 3, 13, 0),
+  ),
+  Comment(
+    id: 'comment_7',
+    postId: 'post_5',
+    authorId: 'user_1',
+    content: 'Flutter로 웹과 앱을 동시에 개발할 수 있어서 정말 편리합니다.',
+    createdAt: DateTime(2025, 5, 5, 17, 0),
+  ),
+  Comment(
+    id: 'comment_8',
+    postId: 'post_6',
+    authorId: 'user_4',
+    content: 'null 안전성 덕분에 런타임 에러가 많이 줄었어요!',
+    createdAt: DateTime(2025, 5, 6, 12, 0),
+  ),
+  Comment(
+    id: 'comment_9',
+    postId: 'post_7',
+    authorId: 'user_3',
+    content: '접근성 부분이 특히 중요한 것 같아요. 자주 놓치는 부분이죠.',
+    createdAt: DateTime(2025, 5, 7, 14, 0),
+  ),
+  Comment(
+    id: 'comment_10',
+    postId: 'post_7',
+    authorId: 'user_5',
+    content: '디자인 시스템을 구축하면 일관성 유지가 훨씬 쉬워집니다!',
+    createdAt: DateTime(2025, 5, 7, 15, 0),
+  ),
+  Comment(
+    id: 'comment_11',
+    postId: 'post_9',
+    authorId: 'user_1',
+    content: '저는 Riverpod을 가장 선호합니다. 타입 안전성이 정말 마음에 들어요.',
+    createdAt: DateTime(2025, 5, 9, 16, 0),
+  ),
+  Comment(
+    id: 'comment_12',
+    postId: 'post_10',
+    authorId: 'user_2',
+    content: '클린 아키텍처에 Riverpod을 조합하면 정말 강력한 구조가 됩니다.',
+    createdAt: DateTime(2025, 5, 10, 10, 0),
+  ),
+  Comment(
+    id: 'comment_13',
+    postId: 'post_10',
+    authorId: 'user_4',
+    content: '작은 프로젝트에서는 오버엔지니어링이 될 수 있어서 잘 판단해야 할 것 같아요.',
+    createdAt: DateTime(2025, 5, 10, 11, 0),
+  ),
+  Comment(
+    id: 'comment_14',
+    postId: 'post_12',
+    authorId: 'user_1',
+    content: 'Firestore 실시간 업데이트 기능이 정말 강력하죠!',
+    createdAt: DateTime(2025, 5, 11, 15, 0),
   ),
 ];

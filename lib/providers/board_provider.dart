@@ -11,13 +11,16 @@ part 'board_provider.g.dart';
 
 const String currentUserId = 'user_1';
 
-/// 모든 게시글의 단일 상태관리자.
-/// 본문은 `Map<id, Post>` 로 정규화 저장하고, 정렬·작성자별 인덱스를 별도로 둔다.
-/// addPost/toggleLike/addComment 모두 O(1) 본질 작업.
+/// 모든 게시글·댓글의 단일 상태관리자.
+/// 본문은 `Map<id, Post>` / `Map<id, Comment>` 로 정규화 저장하고,
+/// 정렬·작성자별·글별 인덱스를 별도로 둔다.
 @Riverpod(keepAlive: true)
 class BoardNotifier extends _$BoardNotifier {
   @override
-  BoardData build() => BoardData.fromPosts(dummyPosts);
+  BoardData build() => BoardData.initial(
+        posts: dummyPosts,
+        comments: dummyComments,
+      );
 
   void addPost({required String title, required String content}) {
     final newPost = Post(
@@ -53,16 +56,21 @@ class BoardNotifier extends _$BoardNotifier {
   }
 
   void addComment(String postId, String content) {
-    final post = state.posts[postId];
-    if (post == null) return;
+    if (!state.posts.containsKey(postId)) return;
     final comment = Comment(
       id: 'comment_${DateTime.now().millisecondsSinceEpoch}',
+      postId: postId,
       authorId: currentUserId,
       content: content,
       createdAt: DateTime.now(),
     );
-    final updated = post.copyWith(comments: [...post.comments, comment]);
-    state = state.copyWith(posts: {...state.posts, postId: updated});
+    state = state.copyWith(
+      comments: {...state.comments, comment.id: comment},
+      commentsByPost: {
+        ...state.commentsByPost,
+        postId: [...?state.commentsByPost[postId], comment.id],
+      },
+    );
   }
 }
 
@@ -106,4 +114,40 @@ List<Post> postsByAuthor(Ref ref, String authorId) {
     if (post != null) result.add(post);
   }
   return result;
+}
+
+/// 특정 댓글만 구독.
+@riverpod
+Comment? commentById(Ref ref, String commentId) {
+  return ref.watch(
+    boardNotifierProvider.select((s) => s.comments[commentId]),
+  );
+}
+
+/// 특정 글의 댓글 목록.
+/// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
+@riverpod
+List<Comment> commentsByPost(Ref ref, String postId) {
+  final ids = ref.watch(
+    boardNotifierProvider.select(
+      (s) => s.commentsByPost[postId] ?? const <String>[],
+    ),
+  );
+  final result = <Comment>[];
+  for (final id in ids) {
+    final c = ref.watch(commentByIdProvider(id));
+    if (c != null) result.add(c);
+  }
+  return result;
+}
+
+/// 특정 글의 댓글 수.
+/// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
+@riverpod
+int commentCountByPost(Ref ref, String postId) {
+  return ref.watch(
+    boardNotifierProvider.select(
+      (s) => s.commentsByPost[postId]?.length ?? 0,
+    ),
+  );
 }

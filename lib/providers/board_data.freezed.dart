@@ -20,6 +20,9 @@ mixin _$BoardData {
   Map<String, Post> get posts => throw _privateConstructorUsedError;
   List<String> get orderedIds => throw _privateConstructorUsedError;
   Map<String, List<String>> get byAuthor => throw _privateConstructorUsedError;
+  Map<String, Comment> get comments => throw _privateConstructorUsedError;
+  Map<String, List<String>> get commentsByPost =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of BoardData
   /// with the given fields replaced by the non-null parameter values.
@@ -37,6 +40,8 @@ abstract class $BoardDataCopyWith<$Res> {
     Map<String, Post> posts,
     List<String> orderedIds,
     Map<String, List<String>> byAuthor,
+    Map<String, Comment> comments,
+    Map<String, List<String>> commentsByPost,
   });
 }
 
@@ -58,6 +63,8 @@ class _$BoardDataCopyWithImpl<$Res, $Val extends BoardData>
     Object? posts = null,
     Object? orderedIds = null,
     Object? byAuthor = null,
+    Object? comments = null,
+    Object? commentsByPost = null,
   }) {
     return _then(
       _value.copyWith(
@@ -75,6 +82,16 @@ class _$BoardDataCopyWithImpl<$Res, $Val extends BoardData>
                 null == byAuthor
                     ? _value.byAuthor
                     : byAuthor // ignore: cast_nullable_to_non_nullable
+                        as Map<String, List<String>>,
+            comments:
+                null == comments
+                    ? _value.comments
+                    : comments // ignore: cast_nullable_to_non_nullable
+                        as Map<String, Comment>,
+            commentsByPost:
+                null == commentsByPost
+                    ? _value.commentsByPost
+                    : commentsByPost // ignore: cast_nullable_to_non_nullable
                         as Map<String, List<String>>,
           )
           as $Val,
@@ -95,6 +112,8 @@ abstract class _$$BoardDataImplCopyWith<$Res>
     Map<String, Post> posts,
     List<String> orderedIds,
     Map<String, List<String>> byAuthor,
+    Map<String, Comment> comments,
+    Map<String, List<String>> commentsByPost,
   });
 }
 
@@ -115,6 +134,8 @@ class __$$BoardDataImplCopyWithImpl<$Res>
     Object? posts = null,
     Object? orderedIds = null,
     Object? byAuthor = null,
+    Object? comments = null,
+    Object? commentsByPost = null,
   }) {
     return _then(
       _$BoardDataImpl(
@@ -133,6 +154,16 @@ class __$$BoardDataImplCopyWithImpl<$Res>
                 ? _value._byAuthor
                 : byAuthor // ignore: cast_nullable_to_non_nullable
                     as Map<String, List<String>>,
+        comments:
+            null == comments
+                ? _value._comments
+                : comments // ignore: cast_nullable_to_non_nullable
+                    as Map<String, Comment>,
+        commentsByPost:
+            null == commentsByPost
+                ? _value._commentsByPost
+                : commentsByPost // ignore: cast_nullable_to_non_nullable
+                    as Map<String, List<String>>,
       ),
     );
   }
@@ -145,9 +176,13 @@ class _$BoardDataImpl extends _BoardData {
     required final Map<String, Post> posts,
     required final List<String> orderedIds,
     required final Map<String, List<String>> byAuthor,
+    required final Map<String, Comment> comments,
+    required final Map<String, List<String>> commentsByPost,
   }) : _posts = posts,
        _orderedIds = orderedIds,
        _byAuthor = byAuthor,
+       _comments = comments,
+       _commentsByPost = commentsByPost,
        super._();
 
   final Map<String, Post> _posts;
@@ -174,9 +209,25 @@ class _$BoardDataImpl extends _BoardData {
     return EqualUnmodifiableMapView(_byAuthor);
   }
 
+  final Map<String, Comment> _comments;
+  @override
+  Map<String, Comment> get comments {
+    if (_comments is EqualUnmodifiableMapView) return _comments;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_comments);
+  }
+
+  final Map<String, List<String>> _commentsByPost;
+  @override
+  Map<String, List<String>> get commentsByPost {
+    if (_commentsByPost is EqualUnmodifiableMapView) return _commentsByPost;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_commentsByPost);
+  }
+
   @override
   String toString() {
-    return 'BoardData(posts: $posts, orderedIds: $orderedIds, byAuthor: $byAuthor)';
+    return 'BoardData(posts: $posts, orderedIds: $orderedIds, byAuthor: $byAuthor, comments: $comments, commentsByPost: $commentsByPost)';
   }
 
   @override
@@ -189,7 +240,12 @@ class _$BoardDataImpl extends _BoardData {
               other._orderedIds,
               _orderedIds,
             ) &&
-            const DeepCollectionEquality().equals(other._byAuthor, _byAuthor));
+            const DeepCollectionEquality().equals(other._byAuthor, _byAuthor) &&
+            const DeepCollectionEquality().equals(other._comments, _comments) &&
+            const DeepCollectionEquality().equals(
+              other._commentsByPost,
+              _commentsByPost,
+            ));
   }
 
   @override
@@ -198,6 +254,8 @@ class _$BoardDataImpl extends _BoardData {
     const DeepCollectionEquality().hash(_posts),
     const DeepCollectionEquality().hash(_orderedIds),
     const DeepCollectionEquality().hash(_byAuthor),
+    const DeepCollectionEquality().hash(_comments),
+    const DeepCollectionEquality().hash(_commentsByPost),
   );
 
   /// Create a copy of BoardData
@@ -214,6 +272,8 @@ abstract class _BoardData extends BoardData {
     required final Map<String, Post> posts,
     required final List<String> orderedIds,
     required final Map<String, List<String>> byAuthor,
+    required final Map<String, Comment> comments,
+    required final Map<String, List<String>> commentsByPost,
   }) = _$BoardDataImpl;
   const _BoardData._() : super._();
 
@@ -223,6 +283,10 @@ abstract class _BoardData extends BoardData {
   List<String> get orderedIds;
   @override
   Map<String, List<String>> get byAuthor;
+  @override
+  Map<String, Comment> get comments;
+  @override
+  Map<String, List<String>> get commentsByPost;
 
   /// Create a copy of BoardData
   /// with the given fields replaced by the non-null parameter values.

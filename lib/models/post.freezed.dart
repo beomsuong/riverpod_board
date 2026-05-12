@@ -23,7 +23,6 @@ mixin _$Post {
   String get content => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   List<String> get likedUserIds => throw _privateConstructorUsedError;
-  List<Comment> get comments => throw _privateConstructorUsedError;
 
   /// Create a copy of Post
   /// with the given fields replaced by the non-null parameter values.
@@ -43,7 +42,6 @@ abstract class $PostCopyWith<$Res> {
     String content,
     DateTime createdAt,
     List<String> likedUserIds,
-    List<Comment> comments,
   });
 }
 
@@ -68,7 +66,6 @@ class _$PostCopyWithImpl<$Res, $Val extends Post>
     Object? content = null,
     Object? createdAt = null,
     Object? likedUserIds = null,
-    Object? comments = null,
   }) {
     return _then(
       _value.copyWith(
@@ -102,11 +99,6 @@ class _$PostCopyWithImpl<$Res, $Val extends Post>
                     ? _value.likedUserIds
                     : likedUserIds // ignore: cast_nullable_to_non_nullable
                         as List<String>,
-            comments:
-                null == comments
-                    ? _value.comments
-                    : comments // ignore: cast_nullable_to_non_nullable
-                        as List<Comment>,
           )
           as $Val,
     );
@@ -128,7 +120,6 @@ abstract class _$$PostImplCopyWith<$Res> implements $PostCopyWith<$Res> {
     String content,
     DateTime createdAt,
     List<String> likedUserIds,
-    List<Comment> comments,
   });
 }
 
@@ -150,7 +141,6 @@ class __$$PostImplCopyWithImpl<$Res>
     Object? content = null,
     Object? createdAt = null,
     Object? likedUserIds = null,
-    Object? comments = null,
   }) {
     return _then(
       _$PostImpl(
@@ -184,11 +174,6 @@ class __$$PostImplCopyWithImpl<$Res>
                 ? _value._likedUserIds
                 : likedUserIds // ignore: cast_nullable_to_non_nullable
                     as List<String>,
-        comments:
-            null == comments
-                ? _value._comments
-                : comments // ignore: cast_nullable_to_non_nullable
-                    as List<Comment>,
       ),
     );
   }
@@ -204,9 +189,7 @@ class _$PostImpl extends _Post {
     required this.content,
     required this.createdAt,
     final List<String> likedUserIds = const [],
-    final List<Comment> comments = const [],
   }) : _likedUserIds = likedUserIds,
-       _comments = comments,
        super._();
 
   @override
@@ -228,18 +211,9 @@ class _$PostImpl extends _Post {
     return EqualUnmodifiableListView(_likedUserIds);
   }
 
-  final List<Comment> _comments;
-  @override
-  @JsonKey()
-  List<Comment> get comments {
-    if (_comments is EqualUnmodifiableListView) return _comments;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_comments);
-  }
-
   @override
   String toString() {
-    return 'Post(id: $id, authorId: $authorId, title: $title, content: $content, createdAt: $createdAt, likedUserIds: $likedUserIds, comments: $comments)';
+    return 'Post(id: $id, authorId: $authorId, title: $title, content: $content, createdAt: $createdAt, likedUserIds: $likedUserIds)';
   }
 
   @override
@@ -257,8 +231,7 @@ class _$PostImpl extends _Post {
             const DeepCollectionEquality().equals(
               other._likedUserIds,
               _likedUserIds,
-            ) &&
-            const DeepCollectionEquality().equals(other._comments, _comments));
+            ));
   }
 
   @override
@@ -270,7 +243,6 @@ class _$PostImpl extends _Post {
     content,
     createdAt,
     const DeepCollectionEquality().hash(_likedUserIds),
-    const DeepCollectionEquality().hash(_comments),
   );
 
   /// Create a copy of Post
@@ -290,7 +262,6 @@ abstract class _Post extends Post {
     required final String content,
     required final DateTime createdAt,
     final List<String> likedUserIds,
-    final List<Comment> comments,
   }) = _$PostImpl;
   const _Post._() : super._();
 
@@ -306,8 +277,6 @@ abstract class _Post extends Post {
   DateTime get createdAt;
   @override
   List<String> get likedUserIds;
-  @override
-  List<Comment> get comments;
 
   /// Create a copy of Post
   /// with the given fields replaced by the non-null parameter values.

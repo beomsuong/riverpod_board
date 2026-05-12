@@ -22,7 +22,7 @@ final usersMapProvider = AutoDisposeProvider<Map<String, User>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UsersMapRef = AutoDisposeProviderRef<Map<String, User>>;
-String _$postByIdHash() => r'0b8482abaea07c9550067c38f92e960eef593a56';
+String _$postByIdHash() => r'2eaef8f9a6689cf25008946dbb7fdb43a675e28c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -45,22 +45,26 @@ class _SystemHash {
   }
 }
 
-/// 특정 글만 구독. freezed의 == 덕분에 해당 글이 바뀌지 않으면 리빌드하지 않음.
+/// 특정 글만 구독.
+/// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
 ///
 /// Copied from [postById].
 @ProviderFor(postById)
 const postByIdProvider = PostByIdFamily();
 
-/// 특정 글만 구독. freezed의 == 덕분에 해당 글이 바뀌지 않으면 리빌드하지 않음.
+/// 특정 글만 구독.
+/// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
 ///
 /// Copied from [postById].
 class PostByIdFamily extends Family<Post?> {
-  /// 특정 글만 구독. freezed의 == 덕분에 해당 글이 바뀌지 않으면 리빌드하지 않음.
+  /// 특정 글만 구독.
+  /// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
   ///
   /// Copied from [postById].
   const PostByIdFamily();
 
-  /// 특정 글만 구독. freezed의 == 덕분에 해당 글이 바뀌지 않으면 리빌드하지 않음.
+  /// 특정 글만 구독.
+  /// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
   ///
   /// Copied from [postById].
   PostByIdProvider call(String postId) {
@@ -87,11 +91,13 @@ class PostByIdFamily extends Family<Post?> {
   String? get name => r'postByIdProvider';
 }
 
-/// 특정 글만 구독. freezed의 == 덕분에 해당 글이 바뀌지 않으면 리빌드하지 않음.
+/// 특정 글만 구독.
+/// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
 ///
 /// Copied from [postById].
 class PostByIdProvider extends AutoDisposeProvider<Post?> {
-  /// 특정 글만 구독. freezed의 == 덕분에 해당 글이 바뀌지 않으면 리빌드하지 않음.
+  /// 특정 글만 구독.
+  /// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
   ///
   /// Copied from [postById].
   PostByIdProvider(String postId)
@@ -170,35 +176,16 @@ class _PostByIdProviderElement extends AutoDisposeProviderElement<Post?>
   String get postId => (origin as PostByIdProvider).postId;
 }
 
-String _$boardNotifierHash() => r'99cf80398f9a53e0ad2de983c1f02b0a4169710f';
+String _$postIdsHash() => r'c9cfdc3bbe9c514612b2db6aab3a3fe02ff43d4c';
 
-/// 모든 게시글의 원본 데이터를 보관하는 단일 상태관리자.
+/// 정렬된 글 ID 목록.
+/// orderedIds 참조가 그대로면 select가 알림을 보내지 않아
+/// 좋아요·댓글로 인한 PostListPage 리빌드가 발생하지 않는다.
 ///
-/// Copied from [BoardNotifier].
-@ProviderFor(BoardNotifier)
-final boardNotifierProvider =
-    NotifierProvider<BoardNotifier, List<Post>>.internal(
-      BoardNotifier.new,
-      name: r'boardNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$boardNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$BoardNotifier = Notifier<List<Post>>;
-String _$postIdsHash() => r'a6abc7af3da66d582b52edfa21be8268f4886fe7';
-
-/// 글 ID 목록 전용 Notifier.
-/// listEquals로 실제 ID 구성이 바뀔 때만(글 추가·삭제) state를 갱신하여
-/// 좋아요·댓글 변경 시 PostListPage가 리빌드되지 않도록 한다.
-///
-/// Copied from [PostIds].
-@ProviderFor(PostIds)
-final postIdsProvider = NotifierProvider<PostIds, List<String>>.internal(
-  PostIds.new,
+/// Copied from [postIds].
+@ProviderFor(postIds)
+final postIdsProvider = Provider<List<String>>.internal(
+  postIds,
   name: r'postIdsProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : _$postIdsHash,
@@ -206,42 +193,37 @@ final postIdsProvider = NotifierProvider<PostIds, List<String>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$PostIds = Notifier<List<String>>;
-String _$postsByAuthorHash() => r'1399e1448d929b3ae7f5b9d18d3107cbca7c640c';
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef PostIdsRef = ProviderRef<List<String>>;
+String _$postsByAuthorHash() => r'8200f0d9f08ba6afc27f418ded1020a59d81ffec';
 
-abstract class _$PostsByAuthor
-    extends BuildlessAutoDisposeNotifier<List<Post>> {
-  late final String authorId;
-
-  List<Post> build(String authorId);
-}
-
-/// 특정 작성자의 글 목록 Notifier.
-/// listEquals + freezed의 Post.== 로 해당 작성자의 글이 실제로 변경됐을 때만
-/// state를 갱신하여 다른 작성자 글 변경 시 AuthorProfilePage가 리빌드되지 않도록 한다.
+/// 특정 작성자의 글 목록.
+/// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
+/// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
 ///
-/// Copied from [PostsByAuthor].
-@ProviderFor(PostsByAuthor)
+/// Copied from [postsByAuthor].
+@ProviderFor(postsByAuthor)
 const postsByAuthorProvider = PostsByAuthorFamily();
 
-/// 특정 작성자의 글 목록 Notifier.
-/// listEquals + freezed의 Post.== 로 해당 작성자의 글이 실제로 변경됐을 때만
-/// state를 갱신하여 다른 작성자 글 변경 시 AuthorProfilePage가 리빌드되지 않도록 한다.
+/// 특정 작성자의 글 목록.
+/// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
+/// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
 ///
-/// Copied from [PostsByAuthor].
+/// Copied from [postsByAuthor].
 class PostsByAuthorFamily extends Family<List<Post>> {
-  /// 특정 작성자의 글 목록 Notifier.
-  /// listEquals + freezed의 Post.== 로 해당 작성자의 글이 실제로 변경됐을 때만
-  /// state를 갱신하여 다른 작성자 글 변경 시 AuthorProfilePage가 리빌드되지 않도록 한다.
+  /// 특정 작성자의 글 목록.
+  /// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
+  /// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
   ///
-  /// Copied from [PostsByAuthor].
+  /// Copied from [postsByAuthor].
   const PostsByAuthorFamily();
 
-  /// 특정 작성자의 글 목록 Notifier.
-  /// listEquals + freezed의 Post.== 로 해당 작성자의 글이 실제로 변경됐을 때만
-  /// state를 갱신하여 다른 작성자 글 변경 시 AuthorProfilePage가 리빌드되지 않도록 한다.
+  /// 특정 작성자의 글 목록.
+  /// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
+  /// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
   ///
-  /// Copied from [PostsByAuthor].
+  /// Copied from [postsByAuthor].
   PostsByAuthorProvider call(String authorId) {
     return PostsByAuthorProvider(authorId);
   }
@@ -268,21 +250,20 @@ class PostsByAuthorFamily extends Family<List<Post>> {
   String? get name => r'postsByAuthorProvider';
 }
 
-/// 특정 작성자의 글 목록 Notifier.
-/// listEquals + freezed의 Post.== 로 해당 작성자의 글이 실제로 변경됐을 때만
-/// state를 갱신하여 다른 작성자 글 변경 시 AuthorProfilePage가 리빌드되지 않도록 한다.
+/// 특정 작성자의 글 목록.
+/// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
+/// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
 ///
-/// Copied from [PostsByAuthor].
-class PostsByAuthorProvider
-    extends AutoDisposeNotifierProviderImpl<PostsByAuthor, List<Post>> {
-  /// 특정 작성자의 글 목록 Notifier.
-  /// listEquals + freezed의 Post.== 로 해당 작성자의 글이 실제로 변경됐을 때만
-  /// state를 갱신하여 다른 작성자 글 변경 시 AuthorProfilePage가 리빌드되지 않도록 한다.
+/// Copied from [postsByAuthor].
+class PostsByAuthorProvider extends AutoDisposeProvider<List<Post>> {
+  /// 특정 작성자의 글 목록.
+  /// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
+  /// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
   ///
-  /// Copied from [PostsByAuthor].
+  /// Copied from [postsByAuthor].
   PostsByAuthorProvider(String authorId)
     : this._internal(
-        () => PostsByAuthor()..authorId = authorId,
+        (ref) => postsByAuthor(ref as PostsByAuthorRef, authorId),
         from: postsByAuthorProvider,
         name: r'postsByAuthorProvider',
         debugGetCreateSourceHash:
@@ -308,16 +289,11 @@ class PostsByAuthorProvider
   final String authorId;
 
   @override
-  List<Post> runNotifierBuild(covariant PostsByAuthor notifier) {
-    return notifier.build(authorId);
-  }
-
-  @override
-  Override overrideWith(PostsByAuthor Function() create) {
+  Override overrideWith(List<Post> Function(PostsByAuthorRef provider) create) {
     return ProviderOverride(
       origin: this,
       override: PostsByAuthorProvider._internal(
-        () => create()..authorId = authorId,
+        (ref) => create(ref as PostsByAuthorRef),
         from: from,
         name: null,
         dependencies: null,
@@ -329,8 +305,7 @@ class PostsByAuthorProvider
   }
 
   @override
-  AutoDisposeNotifierProviderElement<PostsByAuthor, List<Post>>
-  createElement() {
+  AutoDisposeProviderElement<List<Post>> createElement() {
     return _PostsByAuthorProviderElement(this);
   }
 
@@ -350,13 +325,13 @@ class PostsByAuthorProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin PostsByAuthorRef on AutoDisposeNotifierProviderRef<List<Post>> {
+mixin PostsByAuthorRef on AutoDisposeProviderRef<List<Post>> {
   /// The parameter `authorId` of this provider.
   String get authorId;
 }
 
 class _PostsByAuthorProviderElement
-    extends AutoDisposeNotifierProviderElement<PostsByAuthor, List<Post>>
+    extends AutoDisposeProviderElement<List<Post>>
     with PostsByAuthorRef {
   _PostsByAuthorProviderElement(super.provider);
 
@@ -364,5 +339,26 @@ class _PostsByAuthorProviderElement
   String get authorId => (origin as PostsByAuthorProvider).authorId;
 }
 
+String _$boardNotifierHash() => r'6e895e842e4a333efdb33d1f29acaa2d7d7805da';
+
+/// 모든 게시글의 단일 상태관리자.
+/// 본문은 Map<id, Post>로 정규화 저장하고, 정렬·작성자별 인덱스를 별도로 둔다.
+/// addPost/toggleLike/addComment 모두 O(1) 본질 작업.
+///
+/// Copied from [BoardNotifier].
+@ProviderFor(BoardNotifier)
+final boardNotifierProvider =
+    NotifierProvider<BoardNotifier, BoardData>.internal(
+      BoardNotifier.new,
+      name: r'boardNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$boardNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$BoardNotifier = Notifier<BoardData>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -116,7 +116,7 @@ class AuthorProfilePage extends ConsumerWidget {
           else
             SliverList.separated(
               itemCount: authorPosts.length,
-              separatorBuilder: (_, __) => const Divider(),
+              separatorBuilder: (_, _) => const Divider(),
               itemBuilder: (context, index) {
                 final post = authorPosts[index];
                 return Consumer(

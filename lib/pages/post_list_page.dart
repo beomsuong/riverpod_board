@@ -20,7 +20,7 @@ class PostListPage extends ConsumerWidget {
           : ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 8),
               itemCount: postIds.length,
-              separatorBuilder: (_, __) => const Divider(),
+              separatorBuilder: (_, _) => const Divider(),
               itemBuilder: (context, index) => _PostListItem(
                 key: ValueKey(postIds[index]),
                 postId: postIds[index],

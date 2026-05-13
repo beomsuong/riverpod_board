@@ -84,7 +84,7 @@ Map<String, User> usersMap(Ref ref) {
 @riverpod
 Post? postById(Ref ref, String postId) {
   return ref.watch(
-    boardNotifierProvider.select((s) => s.posts[postId]),
+    boardProvider.select((s) => s.posts[postId]),
   );
 }
 
@@ -94,7 +94,7 @@ Post? postById(Ref ref, String postId) {
 @Riverpod(keepAlive: true)
 List<String> postIds(Ref ref) {
   return ref.watch(
-    boardNotifierProvider.select((s) => s.orderedIds),
+    boardProvider.select((s) => s.orderedIds),
   );
 }
 
@@ -104,7 +104,7 @@ List<String> postIds(Ref ref) {
 @riverpod
 List<Post> postsByAuthor(Ref ref, String authorId) {
   final ids = ref.watch(
-    boardNotifierProvider.select(
+    boardProvider.select(
       (s) => s.byAuthor[authorId] ?? const <String>[],
     ),
   );
@@ -120,7 +120,7 @@ List<Post> postsByAuthor(Ref ref, String authorId) {
 @riverpod
 Comment? commentById(Ref ref, String commentId) {
   return ref.watch(
-    boardNotifierProvider.select((s) => s.comments[commentId]),
+    boardProvider.select((s) => s.comments[commentId]),
   );
 }
 
@@ -129,7 +129,7 @@ Comment? commentById(Ref ref, String commentId) {
 @riverpod
 List<Comment> commentsByPost(Ref ref, String postId) {
   final ids = ref.watch(
-    boardNotifierProvider.select(
+    boardProvider.select(
       (s) => s.commentsByPost[postId] ?? const <String>[],
     ),
   );
@@ -146,7 +146,7 @@ List<Comment> commentsByPost(Ref ref, String postId) {
 @riverpod
 int commentCountByPost(Ref ref, String postId) {
   return ref.watch(
-    boardNotifierProvider.select(
+    boardProvider.select(
       (s) => s.commentsByPost[postId]?.length ?? 0,
     ),
   );

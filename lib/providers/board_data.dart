@@ -16,7 +16,7 @@ part 'board_data.freezed.dart';
 /// - byAuthor:        작성자별 글 ID 목록
 /// - commentsByPost:  글별 댓글 ID 목록
 @freezed
-class BoardData with _$BoardData {
+abstract class BoardData with _$BoardData {
   const factory BoardData({
     required Map<String, Post> posts,
     required List<String> orderedIds,

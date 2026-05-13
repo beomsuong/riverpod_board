@@ -30,7 +30,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
   void _submitComment() {
     final text = _commentController.text.trim();
     if (text.isEmpty) return;
-    ref.read(boardNotifierProvider.notifier).addComment(widget.postId, text);
+    ref.read(boardProvider.notifier).addComment(widget.postId, text);
     _commentController.clear();
     _focusNode.unfocus();
   }
@@ -131,7 +131,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                       label: '${post.likeCount}',
                       color: isLiked ? Colors.red : cs.outline,
                       onTap: () => ref
-                          .read(boardNotifierProvider.notifier)
+                          .read(boardProvider.notifier)
                           .toggleLike(widget.postId),
                     ),
                     const SizedBox(width: 8),

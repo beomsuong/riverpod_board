@@ -1,62 +1,114 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../data/board_repository.dart';
 import '../data/dummy_data.dart';
 import '../models/comment.dart';
 import '../models/post.dart';
 import '../models/user.dart';
-import 'board_data.dart';
 
 part 'board_provider.g.dart';
 
 const String currentUserId = 'user_1';
 
-/// 모든 게시글·댓글의 단일 상태관리자.
-/// 본문은 `Map<id, Post>` / `Map<id, Comment>` 로 정규화 저장하고,
-/// 정렬·작성자별·글별 인덱스를 별도로 둔다.
+/// 데이터 소스. 본문은 여기서만 보관한다.
+/// keepAlive — 앱 전역에서 단일 인스턴스.
 @Riverpod(keepAlive: true)
-class BoardNotifier extends _$BoardNotifier {
+BoardRepository boardRepository(Ref ref) => BoardRepository.seeded();
+
+@riverpod
+Map<String, User> usersMap(Ref ref) {
+  return {for (final user in dummyUsers) user.id: user};
+}
+
+/// 정렬된 전체 글 ID 목록.
+/// 게시판 진입의 기준 인덱스라 keepAlive로 둔다.
+@Riverpod(keepAlive: true)
+class PostIds extends _$PostIds {
   @override
-  BoardData build() => BoardData.initial(
-        posts: dummyPosts,
-        comments: dummyComments,
-      );
+  List<String> build() => ref.read(boardRepositoryProvider).listPostIds();
+
+  void prepend(String postId) => state = [postId, ...state];
+}
+
+/// 특정 작성자의 글 ID 목록. 프로필 페이지에서만 쓰이므로 autoDispose.
+/// 페이지를 떠나면 인덱스도 같이 사라진다. 다음 진입 시 repository에서 재시드.
+@riverpod
+class PostIdsByAuthor extends _$PostIdsByAuthor {
+  @override
+  List<String> build(String authorId) =>
+      ref.read(boardRepositoryProvider).listPostIdsByAuthor(authorId);
+
+  void prepend(String postId) => state = [postId, ...state];
+}
+
+/// 특정 글의 댓글 ID 목록.
+/// 상세 페이지 + 리스트의 댓글 수 뱃지에서 쓰이며, autoDispose.
+@riverpod
+class CommentIdsByPost extends _$CommentIdsByPost {
+  @override
+  List<String> build(String postId) =>
+      ref.read(boardRepositoryProvider).listCommentIdsByPost(postId);
+
+  void append(String commentId) => state = [...state, commentId];
+}
+
+/// 본문 분산 캐시 — 글 1건.
+/// autoDispose 라 watch가 끊기는 순간 element/state 모두 사라진다.
+/// 본문은 repository에 남아 있으므로 재진입 시 다시 fetch한다.
+@riverpod
+class PostController extends _$PostController {
+  @override
+  Post? build(String postId) =>
+      ref.read(boardRepositoryProvider).fetchPost(postId);
+
+  void toggleLike() {
+    final post = state;
+    if (post == null) return;
+    final liked = post.likedUserIds.contains(currentUserId);
+    final updated = post.copyWith(
+      likedUserIds: liked
+          ? post.likedUserIds.where((id) => id != currentUserId).toList()
+          : [...post.likedUserIds, currentUserId],
+    );
+    ref.read(boardRepositoryProvider).putPost(updated);
+    state = updated;
+  }
+}
+
+/// 본문 분산 캐시 — 댓글 1건. 글과 동일하게 autoDispose.
+@riverpod
+class CommentController extends _$CommentController {
+  @override
+  Comment? build(String commentId) =>
+      ref.read(boardRepositoryProvider).fetchComment(commentId);
+}
+
+/// 도메인 액션 — 인덱스/저장소를 함께 만져야 하는 mutation 모음.
+/// 단일 책임의 notifier에 둘 수 없는 cross-cutting 동작만 여기에 있다.
+@riverpod
+class BoardActions extends _$BoardActions {
+  @override
+  void build() {}
 
   void addPost({required String title, required String content}) {
-    final newPost = Post(
+    final post = Post(
       id: 'post_${DateTime.now().millisecondsSinceEpoch}',
       authorId: currentUserId,
       title: title,
       content: content,
       createdAt: DateTime.now(),
     );
-    state = state.copyWith(
-      posts: {...state.posts, newPost.id: newPost},
-      orderedIds: [newPost.id, ...state.orderedIds],
-      byAuthor: {
-        ...state.byAuthor,
-        currentUserId: [newPost.id, ...?state.byAuthor[currentUserId]],
-      },
-    );
-  }
-
-  void toggleLike(String postId) {
-    final post = state.posts[postId];
-    if (post == null) return;
-    final updated = post.likedUserIds.contains(currentUserId)
-        ? post.copyWith(
-            likedUserIds: post.likedUserIds
-                .where((id) => id != currentUserId)
-                .toList(),
-          )
-        : post.copyWith(
-            likedUserIds: [...post.likedUserIds, currentUserId],
-          );
-    state = state.copyWith(posts: {...state.posts, postId: updated});
+    ref.read(boardRepositoryProvider).putPost(post);
+    ref.read(postIdsProvider.notifier).prepend(post.id);
+    // 작성자 인덱스가 활성이면 prepend, 아니면 다음 build에서 자연 반영.
+    if (ref.exists(postIdsByAuthorProvider(currentUserId))) {
+      ref.read(postIdsByAuthorProvider(currentUserId).notifier).prepend(post.id);
+    }
   }
 
   void addComment(String postId, String content) {
-    if (!state.posts.containsKey(postId)) return;
+    final repo = ref.read(boardRepositoryProvider);
+    if (repo.fetchPost(postId) == null) return;
     final comment = Comment(
       id: 'comment_${DateTime.now().millisecondsSinceEpoch}',
       postId: postId,
@@ -64,90 +116,7 @@ class BoardNotifier extends _$BoardNotifier {
       content: content,
       createdAt: DateTime.now(),
     );
-    state = state.copyWith(
-      comments: {...state.comments, comment.id: comment},
-      commentsByPost: {
-        ...state.commentsByPost,
-        postId: [...?state.commentsByPost[postId], comment.id],
-      },
-    );
+    repo.putComment(comment);
+    ref.read(commentIdsByPostProvider(postId).notifier).append(comment.id);
   }
-}
-
-@riverpod
-Map<String, User> usersMap(Ref ref) {
-  return {for (final user in dummyUsers) user.id: user};
-}
-
-/// 특정 글만 구독.
-/// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
-@riverpod
-Post? postById(Ref ref, String postId) {
-  return ref.watch(
-    boardProvider.select((s) => s.posts[postId]),
-  );
-}
-
-/// 정렬된 글 ID 목록.
-/// orderedIds 참조가 그대로면 select가 알림을 보내지 않아
-/// 좋아요·댓글로 인한 PostListPage 리빌드가 발생하지 않는다.
-@Riverpod(keepAlive: true)
-List<String> postIds(Ref ref) {
-  return ref.watch(
-    boardProvider.select((s) => s.orderedIds),
-  );
-}
-
-/// 특정 작성자의 글 목록.
-/// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
-/// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
-@riverpod
-List<Post> postsByAuthor(Ref ref, String authorId) {
-  final ids = ref.watch(
-    boardProvider.select(
-      (s) => s.byAuthor[authorId] ?? const <String>[],
-    ),
-  );
-  final result = <Post>[];
-  for (final id in ids) {
-    final post = ref.watch(postByIdProvider(id));
-    if (post != null) result.add(post);
-  }
-  return result;
-}
-
-/// 특정 댓글만 구독.
-@riverpod
-Comment? commentById(Ref ref, String commentId) {
-  return ref.watch(
-    boardProvider.select((s) => s.comments[commentId]),
-  );
-}
-
-/// 특정 글의 댓글 목록.
-/// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
-@riverpod
-List<Comment> commentsByPost(Ref ref, String postId) {
-  final ids = ref.watch(
-    boardProvider.select(
-      (s) => s.commentsByPost[postId] ?? const <String>[],
-    ),
-  );
-  final result = <Comment>[];
-  for (final id in ids) {
-    final c = ref.watch(commentByIdProvider(id));
-    if (c != null) result.add(c);
-  }
-  return result;
-}
-
-/// 특정 글의 댓글 수.
-/// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
-@riverpod
-int commentCountByPost(Ref ref, String postId) {
-  return ref.watch(
-    boardProvider.select(
-      (s) => s.commentsByPost[postId]?.length ?? 0,
-    ),
-  );
 }

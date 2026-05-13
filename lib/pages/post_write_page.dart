@@ -25,7 +25,7 @@ class _PostWritePageState extends ConsumerState<PostWritePage> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    ref.read(boardProvider.notifier).addPost(
+    ref.read(boardActionsProvider.notifier).addPost(
           title: _titleController.text.trim(),
           content: _contentController.text.trim(),
         );

@@ -8,71 +8,55 @@ part of 'board_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// 모든 게시글·댓글의 단일 상태관리자.
-/// 본문은 `Map<id, Post>` / `Map<id, Comment>` 로 정규화 저장하고,
-/// 정렬·작성자별·글별 인덱스를 별도로 둔다.
+/// 데이터 소스. 본문은 여기서만 보관한다.
+/// keepAlive — 앱 전역에서 단일 인스턴스.
 
-@ProviderFor(BoardNotifier)
-final boardProvider = BoardNotifierProvider._();
+@ProviderFor(boardRepository)
+final boardRepositoryProvider = BoardRepositoryProvider._();
 
-/// 모든 게시글·댓글의 단일 상태관리자.
-/// 본문은 `Map<id, Post>` / `Map<id, Comment>` 로 정규화 저장하고,
-/// 정렬·작성자별·글별 인덱스를 별도로 둔다.
-final class BoardNotifierProvider
-    extends $NotifierProvider<BoardNotifier, BoardData> {
-  /// 모든 게시글·댓글의 단일 상태관리자.
-  /// 본문은 `Map<id, Post>` / `Map<id, Comment>` 로 정규화 저장하고,
-  /// 정렬·작성자별·글별 인덱스를 별도로 둔다.
-  BoardNotifierProvider._()
+/// 데이터 소스. 본문은 여기서만 보관한다.
+/// keepAlive — 앱 전역에서 단일 인스턴스.
+
+final class BoardRepositoryProvider
+    extends
+        $FunctionalProvider<BoardRepository, BoardRepository, BoardRepository>
+    with $Provider<BoardRepository> {
+  /// 데이터 소스. 본문은 여기서만 보관한다.
+  /// keepAlive — 앱 전역에서 단일 인스턴스.
+  BoardRepositoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'boardProvider',
+        name: r'boardRepositoryProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$boardNotifierHash();
+  String debugGetCreateSourceHash() => _$boardRepositoryHash();
 
   @$internal
   @override
-  BoardNotifier create() => BoardNotifier();
+  $ProviderElement<BoardRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  BoardRepository create(Ref ref) {
+    return boardRepository(ref);
+  }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(BoardData value) {
+  Override overrideWithValue(BoardRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<BoardData>(value),
+      providerOverride: $SyncValueProvider<BoardRepository>(value),
     );
   }
 }
 
-String _$boardNotifierHash() => r'9bb97b4801be7f1968b25dcd6fdda61f71ad1fcd';
-
-/// 모든 게시글·댓글의 단일 상태관리자.
-/// 본문은 `Map<id, Post>` / `Map<id, Comment>` 로 정규화 저장하고,
-/// 정렬·작성자별·글별 인덱스를 별도로 둔다.
-
-abstract class _$BoardNotifier extends $Notifier<BoardData> {
-  BoardData build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final ref = this.ref as $Ref<BoardData, BoardData>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<BoardData, BoardData>,
-              BoardData,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, build);
-  }
-}
+String _$boardRepositoryHash() => r'26455353bf06e830dda9f162159d50f8da472f8f';
 
 @ProviderFor(usersMap)
 final usersMapProvider = UsersMapProvider._();
@@ -121,113 +105,17 @@ final class UsersMapProvider
 
 String _$usersMapHash() => r'1d34fca0ad1f37a01ef7dbecf6ef3fff89d8f97e';
 
-/// 특정 글만 구독.
-/// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
+/// 정렬된 전체 글 ID 목록.
+/// 게시판 진입의 기준 인덱스라 keepAlive로 둔다.
 
-@ProviderFor(postById)
-final postByIdProvider = PostByIdFamily._();
-
-/// 특정 글만 구독.
-/// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
-
-final class PostByIdProvider extends $FunctionalProvider<Post?, Post?, Post?>
-    with $Provider<Post?> {
-  /// 특정 글만 구독.
-  /// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
-  PostByIdProvider._({
-    required PostByIdFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'postByIdProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$postByIdHash();
-
-  @override
-  String toString() {
-    return r'postByIdProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  $ProviderElement<Post?> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  Post? create(Ref ref) {
-    final argument = this.argument as String;
-    return postById(ref, argument);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Post? value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Post?>(value),
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is PostByIdProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$postByIdHash() => r'c0adae5db7f794064fe0402a47ef6005adfafd92';
-
-/// 특정 글만 구독.
-/// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
-
-final class PostByIdFamily extends $Family
-    with $FunctionalFamilyOverride<Post?, String> {
-  PostByIdFamily._()
-    : super(
-        retry: null,
-        name: r'postByIdProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  /// 특정 글만 구독.
-  /// posts[id]가 동일 객체면 select가 알림을 보내지 않아 다른 글 변경 시 재실행되지 않는다.
-
-  PostByIdProvider call(String postId) =>
-      PostByIdProvider._(argument: postId, from: this);
-
-  @override
-  String toString() => r'postByIdProvider';
-}
-
-/// 정렬된 글 ID 목록.
-/// orderedIds 참조가 그대로면 select가 알림을 보내지 않아
-/// 좋아요·댓글로 인한 PostListPage 리빌드가 발생하지 않는다.
-
-@ProviderFor(postIds)
+@ProviderFor(PostIds)
 final postIdsProvider = PostIdsProvider._();
 
-/// 정렬된 글 ID 목록.
-/// orderedIds 참조가 그대로면 select가 알림을 보내지 않아
-/// 좋아요·댓글로 인한 PostListPage 리빌드가 발생하지 않는다.
-
-final class PostIdsProvider
-    extends $FunctionalProvider<List<String>, List<String>, List<String>>
-    with $Provider<List<String>> {
-  /// 정렬된 글 ID 목록.
-  /// orderedIds 참조가 그대로면 select가 알림을 보내지 않아
-  /// 좋아요·댓글로 인한 PostListPage 리빌드가 발생하지 않는다.
+/// 정렬된 전체 글 ID 목록.
+/// 게시판 진입의 기준 인덱스라 keepAlive로 둔다.
+final class PostIdsProvider extends $NotifierProvider<PostIds, List<String>> {
+  /// 정렬된 전체 글 ID 목록.
+  /// 게시판 진입의 기준 인덱스라 keepAlive로 둔다.
   PostIdsProvider._()
     : super(
         from: null,
@@ -244,13 +132,7 @@ final class PostIdsProvider
 
   @$internal
   @override
-  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  List<String> create(Ref ref) {
-    return postIds(ref);
-  }
+  PostIds create() => PostIds();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(List<String> value) {
@@ -261,68 +143,77 @@ final class PostIdsProvider
   }
 }
 
-String _$postIdsHash() => r'00e1ef7e3d16348156d67824dd493211b64b53c8';
+String _$postIdsHash() => r'5077e7c7142d4e67b1b436f5f8844325dc989cd5';
 
-/// 특정 작성자의 글 목록.
-/// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
-/// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
+/// 정렬된 전체 글 ID 목록.
+/// 게시판 진입의 기준 인덱스라 keepAlive로 둔다.
 
-@ProviderFor(postsByAuthor)
-final postsByAuthorProvider = PostsByAuthorFamily._();
+abstract class _$PostIds extends $Notifier<List<String>> {
+  List<String> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<List<String>, List<String>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<String>, List<String>>,
+              List<String>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
 
-/// 특정 작성자의 글 목록.
-/// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
-/// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
+/// 특정 작성자의 글 ID 목록. 프로필 페이지에서만 쓰이므로 autoDispose.
+/// 페이지를 떠나면 인덱스도 같이 사라진다. 다음 진입 시 repository에서 재시드.
 
-final class PostsByAuthorProvider
-    extends $FunctionalProvider<List<Post>, List<Post>, List<Post>>
-    with $Provider<List<Post>> {
-  /// 특정 작성자의 글 목록.
-  /// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
-  /// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
-  PostsByAuthorProvider._({
-    required PostsByAuthorFamily super.from,
+@ProviderFor(PostIdsByAuthor)
+final postIdsByAuthorProvider = PostIdsByAuthorFamily._();
+
+/// 특정 작성자의 글 ID 목록. 프로필 페이지에서만 쓰이므로 autoDispose.
+/// 페이지를 떠나면 인덱스도 같이 사라진다. 다음 진입 시 repository에서 재시드.
+final class PostIdsByAuthorProvider
+    extends $NotifierProvider<PostIdsByAuthor, List<String>> {
+  /// 특정 작성자의 글 ID 목록. 프로필 페이지에서만 쓰이므로 autoDispose.
+  /// 페이지를 떠나면 인덱스도 같이 사라진다. 다음 진입 시 repository에서 재시드.
+  PostIdsByAuthorProvider._({
+    required PostIdsByAuthorFamily super.from,
     required String super.argument,
   }) : super(
          retry: null,
-         name: r'postsByAuthorProvider',
+         name: r'postIdsByAuthorProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$postsByAuthorHash();
+  String debugGetCreateSourceHash() => _$postIdsByAuthorHash();
 
   @override
   String toString() {
-    return r'postsByAuthorProvider'
+    return r'postIdsByAuthorProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  $ProviderElement<List<Post>> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  List<Post> create(Ref ref) {
-    final argument = this.argument as String;
-    return postsByAuthor(ref, argument);
-  }
+  PostIdsByAuthor create() => PostIdsByAuthor();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<Post> value) {
+  Override overrideWithValue(List<String> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<Post>>(value),
+      providerOverride: $SyncValueProvider<List<String>>(value),
     );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is PostsByAuthorProvider && other.argument == argument;
+    return other is PostIdsByAuthorProvider && other.argument == argument;
   }
 
   @override
@@ -331,76 +222,321 @@ final class PostsByAuthorProvider
   }
 }
 
-String _$postsByAuthorHash() => r'6b47563753e787016d847a5a6a6fba99fc09e708';
+String _$postIdsByAuthorHash() => r'4c6952c2b9692ce4bb0b8a2465662c72e4c0a9f6';
 
-/// 특정 작성자의 글 목록.
-/// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
-/// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
+/// 특정 작성자의 글 ID 목록. 프로필 페이지에서만 쓰이므로 autoDispose.
+/// 페이지를 떠나면 인덱스도 같이 사라진다. 다음 진입 시 repository에서 재시드.
 
-final class PostsByAuthorFamily extends $Family
-    with $FunctionalFamilyOverride<List<Post>, String> {
-  PostsByAuthorFamily._()
+final class PostIdsByAuthorFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          PostIdsByAuthor,
+          List<String>,
+          List<String>,
+          List<String>,
+          String
+        > {
+  PostIdsByAuthorFamily._()
     : super(
         retry: null,
-        name: r'postsByAuthorProvider',
+        name: r'postIdsByAuthorProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  /// 특정 작성자의 글 목록.
-  /// byAuthor[authorId]가 그대로면 ids는 동일 참조 → 다른 작성자 글 변경 시 재실행되지 않는다.
-  /// 본인 글이 바뀌면 postByIdProvider 알림으로 재실행되어 갱신된 본문을 반환한다.
+  /// 특정 작성자의 글 ID 목록. 프로필 페이지에서만 쓰이므로 autoDispose.
+  /// 페이지를 떠나면 인덱스도 같이 사라진다. 다음 진입 시 repository에서 재시드.
 
-  PostsByAuthorProvider call(String authorId) =>
-      PostsByAuthorProvider._(argument: authorId, from: this);
+  PostIdsByAuthorProvider call(String authorId) =>
+      PostIdsByAuthorProvider._(argument: authorId, from: this);
 
   @override
-  String toString() => r'postsByAuthorProvider';
+  String toString() => r'postIdsByAuthorProvider';
 }
 
-/// 특정 댓글만 구독.
+/// 특정 작성자의 글 ID 목록. 프로필 페이지에서만 쓰이므로 autoDispose.
+/// 페이지를 떠나면 인덱스도 같이 사라진다. 다음 진입 시 repository에서 재시드.
 
-@ProviderFor(commentById)
-final commentByIdProvider = CommentByIdFamily._();
+abstract class _$PostIdsByAuthor extends $Notifier<List<String>> {
+  late final _$args = ref.$arg as String;
+  String get authorId => _$args;
 
-/// 특정 댓글만 구독.
+  List<String> build(String authorId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<List<String>, List<String>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<String>, List<String>>,
+              List<String>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}
 
-final class CommentByIdProvider
-    extends $FunctionalProvider<Comment?, Comment?, Comment?>
-    with $Provider<Comment?> {
-  /// 특정 댓글만 구독.
-  CommentByIdProvider._({
-    required CommentByIdFamily super.from,
+/// 특정 글의 댓글 ID 목록.
+/// 상세 페이지 + 리스트의 댓글 수 뱃지에서 쓰이며, autoDispose.
+
+@ProviderFor(CommentIdsByPost)
+final commentIdsByPostProvider = CommentIdsByPostFamily._();
+
+/// 특정 글의 댓글 ID 목록.
+/// 상세 페이지 + 리스트의 댓글 수 뱃지에서 쓰이며, autoDispose.
+final class CommentIdsByPostProvider
+    extends $NotifierProvider<CommentIdsByPost, List<String>> {
+  /// 특정 글의 댓글 ID 목록.
+  /// 상세 페이지 + 리스트의 댓글 수 뱃지에서 쓰이며, autoDispose.
+  CommentIdsByPostProvider._({
+    required CommentIdsByPostFamily super.from,
     required String super.argument,
   }) : super(
          retry: null,
-         name: r'commentByIdProvider',
+         name: r'commentIdsByPostProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$commentByIdHash();
+  String debugGetCreateSourceHash() => _$commentIdsByPostHash();
 
   @override
   String toString() {
-    return r'commentByIdProvider'
+    return r'commentIdsByPostProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  $ProviderElement<Comment?> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  CommentIdsByPost create() => CommentIdsByPost();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
 
   @override
-  Comment? create(Ref ref) {
-    final argument = this.argument as String;
-    return commentById(ref, argument);
+  bool operator ==(Object other) {
+    return other is CommentIdsByPostProvider && other.argument == argument;
   }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$commentIdsByPostHash() => r'297b9419800fe896440204840e41df967ffbbc62';
+
+/// 특정 글의 댓글 ID 목록.
+/// 상세 페이지 + 리스트의 댓글 수 뱃지에서 쓰이며, autoDispose.
+
+final class CommentIdsByPostFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          CommentIdsByPost,
+          List<String>,
+          List<String>,
+          List<String>,
+          String
+        > {
+  CommentIdsByPostFamily._()
+    : super(
+        retry: null,
+        name: r'commentIdsByPostProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// 특정 글의 댓글 ID 목록.
+  /// 상세 페이지 + 리스트의 댓글 수 뱃지에서 쓰이며, autoDispose.
+
+  CommentIdsByPostProvider call(String postId) =>
+      CommentIdsByPostProvider._(argument: postId, from: this);
+
+  @override
+  String toString() => r'commentIdsByPostProvider';
+}
+
+/// 특정 글의 댓글 ID 목록.
+/// 상세 페이지 + 리스트의 댓글 수 뱃지에서 쓰이며, autoDispose.
+
+abstract class _$CommentIdsByPost extends $Notifier<List<String>> {
+  late final _$args = ref.$arg as String;
+  String get postId => _$args;
+
+  List<String> build(String postId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<List<String>, List<String>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<String>, List<String>>,
+              List<String>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}
+
+/// 본문 분산 캐시 — 글 1건.
+/// autoDispose 라 watch가 끊기는 순간 element/state 모두 사라진다.
+/// 본문은 repository에 남아 있으므로 재진입 시 다시 fetch한다.
+
+@ProviderFor(PostController)
+final postControllerProvider = PostControllerFamily._();
+
+/// 본문 분산 캐시 — 글 1건.
+/// autoDispose 라 watch가 끊기는 순간 element/state 모두 사라진다.
+/// 본문은 repository에 남아 있으므로 재진입 시 다시 fetch한다.
+final class PostControllerProvider
+    extends $NotifierProvider<PostController, Post?> {
+  /// 본문 분산 캐시 — 글 1건.
+  /// autoDispose 라 watch가 끊기는 순간 element/state 모두 사라진다.
+  /// 본문은 repository에 남아 있으므로 재진입 시 다시 fetch한다.
+  PostControllerProvider._({
+    required PostControllerFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'postControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$postControllerHash();
+
+  @override
+  String toString() {
+    return r'postControllerProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  PostController create() => PostController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Post? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Post?>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PostControllerProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$postControllerHash() => r'3b3bf9ea1549c506af712be62218579b2ed70482';
+
+/// 본문 분산 캐시 — 글 1건.
+/// autoDispose 라 watch가 끊기는 순간 element/state 모두 사라진다.
+/// 본문은 repository에 남아 있으므로 재진입 시 다시 fetch한다.
+
+final class PostControllerFamily extends $Family
+    with $ClassFamilyOverride<PostController, Post?, Post?, Post?, String> {
+  PostControllerFamily._()
+    : super(
+        retry: null,
+        name: r'postControllerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// 본문 분산 캐시 — 글 1건.
+  /// autoDispose 라 watch가 끊기는 순간 element/state 모두 사라진다.
+  /// 본문은 repository에 남아 있으므로 재진입 시 다시 fetch한다.
+
+  PostControllerProvider call(String postId) =>
+      PostControllerProvider._(argument: postId, from: this);
+
+  @override
+  String toString() => r'postControllerProvider';
+}
+
+/// 본문 분산 캐시 — 글 1건.
+/// autoDispose 라 watch가 끊기는 순간 element/state 모두 사라진다.
+/// 본문은 repository에 남아 있으므로 재진입 시 다시 fetch한다.
+
+abstract class _$PostController extends $Notifier<Post?> {
+  late final _$args = ref.$arg as String;
+  String get postId => _$args;
+
+  Post? build(String postId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Post?, Post?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Post?, Post?>,
+              Post?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}
+
+/// 본문 분산 캐시 — 댓글 1건. 글과 동일하게 autoDispose.
+
+@ProviderFor(CommentController)
+final commentControllerProvider = CommentControllerFamily._();
+
+/// 본문 분산 캐시 — 댓글 1건. 글과 동일하게 autoDispose.
+final class CommentControllerProvider
+    extends $NotifierProvider<CommentController, Comment?> {
+  /// 본문 분산 캐시 — 댓글 1건. 글과 동일하게 autoDispose.
+  CommentControllerProvider._({
+    required CommentControllerFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'commentControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$commentControllerHash();
+
+  @override
+  String toString() {
+    return r'commentControllerProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  CommentController create() => CommentController();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(Comment? value) {
@@ -412,7 +548,7 @@ final class CommentByIdProvider
 
   @override
   bool operator ==(Object other) {
-    return other is CommentByIdProvider && other.argument == argument;
+    return other is CommentControllerProvider && other.argument == argument;
   }
 
   @override
@@ -421,209 +557,117 @@ final class CommentByIdProvider
   }
 }
 
-String _$commentByIdHash() => r'1aa035cec3ec8f6eb3f049575c04a43d66761d0b';
+String _$commentControllerHash() => r'13c1414be15e01a21e6c63551f2710b6d0cc1f25';
 
-/// 특정 댓글만 구독.
+/// 본문 분산 캐시 — 댓글 1건. 글과 동일하게 autoDispose.
 
-final class CommentByIdFamily extends $Family
-    with $FunctionalFamilyOverride<Comment?, String> {
-  CommentByIdFamily._()
+final class CommentControllerFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          CommentController,
+          Comment?,
+          Comment?,
+          Comment?,
+          String
+        > {
+  CommentControllerFamily._()
     : super(
         retry: null,
-        name: r'commentByIdProvider',
+        name: r'commentControllerProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  /// 특정 댓글만 구독.
+  /// 본문 분산 캐시 — 댓글 1건. 글과 동일하게 autoDispose.
 
-  CommentByIdProvider call(String commentId) =>
-      CommentByIdProvider._(argument: commentId, from: this);
+  CommentControllerProvider call(String commentId) =>
+      CommentControllerProvider._(argument: commentId, from: this);
 
   @override
-  String toString() => r'commentByIdProvider';
+  String toString() => r'commentControllerProvider';
 }
 
-/// 특정 글의 댓글 목록.
-/// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
+/// 본문 분산 캐시 — 댓글 1건. 글과 동일하게 autoDispose.
 
-@ProviderFor(commentsByPost)
-final commentsByPostProvider = CommentsByPostFamily._();
+abstract class _$CommentController extends $Notifier<Comment?> {
+  late final _$args = ref.$arg as String;
+  String get commentId => _$args;
 
-/// 특정 글의 댓글 목록.
-/// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
-
-final class CommentsByPostProvider
-    extends $FunctionalProvider<List<Comment>, List<Comment>, List<Comment>>
-    with $Provider<List<Comment>> {
-  /// 특정 글의 댓글 목록.
-  /// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
-  CommentsByPostProvider._({
-    required CommentsByPostFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'commentsByPostProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
+  Comment? build(String commentId);
+  @$mustCallSuper
   @override
-  String debugGetCreateSourceHash() => _$commentsByPostHash();
-
-  @override
-  String toString() {
-    return r'commentsByPostProvider'
-        ''
-        '($argument)';
+  void runBuild() {
+    final ref = this.ref as $Ref<Comment?, Comment?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Comment?, Comment?>,
+              Comment?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
   }
+}
+
+/// 도메인 액션 — 인덱스/저장소를 함께 만져야 하는 mutation 모음.
+/// 단일 책임의 notifier에 둘 수 없는 cross-cutting 동작만 여기에 있다.
+
+@ProviderFor(BoardActions)
+final boardActionsProvider = BoardActionsProvider._();
+
+/// 도메인 액션 — 인덱스/저장소를 함께 만져야 하는 mutation 모음.
+/// 단일 책임의 notifier에 둘 수 없는 cross-cutting 동작만 여기에 있다.
+final class BoardActionsProvider extends $NotifierProvider<BoardActions, void> {
+  /// 도메인 액션 — 인덱스/저장소를 함께 만져야 하는 mutation 모음.
+  /// 단일 책임의 notifier에 둘 수 없는 cross-cutting 동작만 여기에 있다.
+  BoardActionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'boardActionsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$boardActionsHash();
 
   @$internal
   @override
-  $ProviderElement<List<Comment>> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  List<Comment> create(Ref ref) {
-    final argument = this.argument as String;
-    return commentsByPost(ref, argument);
-  }
+  BoardActions create() => BoardActions();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<Comment> value) {
+  Override overrideWithValue(void value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<Comment>>(value),
+      providerOverride: $SyncValueProvider<void>(value),
     );
   }
-
-  @override
-  bool operator ==(Object other) {
-    return other is CommentsByPostProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
 }
 
-String _$commentsByPostHash() => r'5ea6217fdefd9924f74b857fb17897fa236e4988';
+String _$boardActionsHash() => r'5b5756aeac38429079b9f9299b4b5e8847db1e5d';
 
-/// 특정 글의 댓글 목록.
-/// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
+/// 도메인 액션 — 인덱스/저장소를 함께 만져야 하는 mutation 모음.
+/// 단일 책임의 notifier에 둘 수 없는 cross-cutting 동작만 여기에 있다.
 
-final class CommentsByPostFamily extends $Family
-    with $FunctionalFamilyOverride<List<Comment>, String> {
-  CommentsByPostFamily._()
-    : super(
-        retry: null,
-        name: r'commentsByPostProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  /// 특정 글의 댓글 목록.
-  /// commentsByPost[postId]가 그대로면 ids는 동일 참조 → 다른 글의 댓글 추가 시 재실행되지 않는다.
-
-  CommentsByPostProvider call(String postId) =>
-      CommentsByPostProvider._(argument: postId, from: this);
-
+abstract class _$BoardActions extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
   @override
-  String toString() => r'commentsByPostProvider';
-}
-
-/// 특정 글의 댓글 수.
-/// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
-
-@ProviderFor(commentCountByPost)
-final commentCountByPostProvider = CommentCountByPostFamily._();
-
-/// 특정 글의 댓글 수.
-/// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
-
-final class CommentCountByPostProvider
-    extends $FunctionalProvider<int, int, int>
-    with $Provider<int> {
-  /// 특정 글의 댓글 수.
-  /// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
-  CommentCountByPostProvider._({
-    required CommentCountByPostFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'commentCountByPostProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$commentCountByPostHash();
-
-  @override
-  String toString() {
-    return r'commentCountByPostProvider'
-        ''
-        '($argument)';
+  void runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<void, void>,
+              void,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
   }
-
-  @$internal
-  @override
-  $ProviderElement<int> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  int create(Ref ref) {
-    final argument = this.argument as String;
-    return commentCountByPost(ref, argument);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(int value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<int>(value),
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is CommentCountByPostProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$commentCountByPostHash() =>
-    r'681110d7cb446a1550f547c35a571b7214634418';
-
-/// 특정 글의 댓글 수.
-/// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
-
-final class CommentCountByPostFamily extends $Family
-    with $FunctionalFamilyOverride<int, String> {
-  CommentCountByPostFamily._()
-    : super(
-        retry: null,
-        name: r'commentCountByPostProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  /// 특정 글의 댓글 수.
-  /// int 값을 select하므로 다른 글에 댓글이 추가되어도 알림이 오지 않는다.
-
-  CommentCountByPostProvider call(String postId) =>
-      CommentCountByPostProvider._(argument: postId, from: this);
-
-  @override
-  String toString() => r'commentCountByPostProvider';
 }

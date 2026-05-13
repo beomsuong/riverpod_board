@@ -10,7 +10,7 @@ class PostListPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 글 추가·삭제 시에만 리빌드 (좋아요·댓글로 인한 리빌드 없음)
+    // 인덱스만 watch — 본문/좋아요/댓글 변경은 자식 카드에서 처리된다.
     final postIds = ref.watch(postIdsProvider);
 
     return Scaffold(
@@ -35,8 +35,9 @@ class PostListPage extends ConsumerWidget {
   }
 }
 
-/// 각 항목이 자신의 글(postByIdProvider)만 구독하여
-/// 다른 글 변경 시 이 위젯은 리빌드되지 않는다.
+/// 각 항목이 자신의 글(postControllerProvider)만 구독.
+/// 다른 글이 바뀌어도 이 위젯은 리빌드되지 않으며,
+/// 리스트에서 사라지면 PostController 자체가 autoDispose된다.
 class _PostListItem extends ConsumerWidget {
   const _PostListItem({required super.key, required this.postId});
 
@@ -44,9 +45,11 @@ class _PostListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(postByIdProvider(postId));
+    final post = ref.watch(postControllerProvider(postId));
     final users = ref.watch(usersMapProvider);
-    final commentCount = ref.watch(commentCountByPostProvider(postId));
+    final commentCount = ref.watch(
+      commentIdsByPostProvider(postId).select((ids) => ids.length),
+    );
     if (post == null) return const SizedBox.shrink();
     return PostCard(
       post: post,

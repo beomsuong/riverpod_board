@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../models/user.dart';
 import '../providers/board_provider.dart';
 import '../widgets/post_card.dart';
 import '../widgets/user_avatar.dart';
@@ -14,7 +15,7 @@ class AuthorProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final users = ref.watch(usersMapProvider);
-    final authorPosts = ref.watch(postsByAuthorProvider(authorId));
+    final postIds = ref.watch(postIdsByAuthorProvider(authorId));
     final author = users[authorId];
 
     if (author == null) {
@@ -24,7 +25,13 @@ class AuthorProfilePage extends ConsumerWidget {
       );
     }
 
-    final totalLikes = authorPosts.fold(0, (sum, p) => sum + p.likeCount);
+    // 통계 — 각 글의 PostController를 watch해 합산.
+    // 카드 위젯도 동일 provider를 watch하므로 추가 cost 없음.
+    var totalLikes = 0;
+    for (final id in postIds) {
+      final post = ref.watch(postControllerProvider(id));
+      if (post != null) totalLikes = totalLikes + post.likeCount;
+    }
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
@@ -71,7 +78,7 @@ class AuthorProfilePage extends ConsumerWidget {
                       children: [
                         _StatItem(
                           label: '작성한 글',
-                          value: '${authorPosts.length}',
+                          value: '${postIds.length}',
                         ),
                         VerticalDivider(
                           width: 48,
@@ -104,7 +111,7 @@ class AuthorProfilePage extends ConsumerWidget {
             ),
           ),
 
-          if (authorPosts.isEmpty)
+          if (postIds.isEmpty)
             SliverFillRemaining(
               child: Center(
                 child: Text(
@@ -115,26 +122,43 @@ class AuthorProfilePage extends ConsumerWidget {
             )
           else
             SliverList.separated(
-              itemCount: authorPosts.length,
+              itemCount: postIds.length,
               separatorBuilder: (_, _) => const Divider(),
-              itemBuilder: (context, index) {
-                final post = authorPosts[index];
-                return Consumer(
-                  builder: (context, ref, _) {
-                    final commentCount =
-                        ref.watch(commentCountByPostProvider(post.id));
-                    return PostCard(
-                      post: post,
-                      author: author,
-                      commentCount: commentCount,
-                      onTap: () => context.push('/post/${post.id}'),
-                    );
-                  },
-                );
-              },
+              itemBuilder: (context, index) => _AuthorPostTile(
+                key: ValueKey(postIds[index]),
+                postId: postIds[index],
+                author: author,
+              ),
             ),
         ],
       ),
+    );
+  }
+}
+
+/// 작성자 프로필의 글 1건. 자기 PostController만 watch한다.
+class _AuthorPostTile extends ConsumerWidget {
+  const _AuthorPostTile({
+    super.key,
+    required this.postId,
+    required this.author,
+  });
+
+  final String postId;
+  final User author;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final post = ref.watch(postControllerProvider(postId));
+    final commentCount = ref.watch(
+      commentIdsByPostProvider(postId).select((ids) => ids.length),
+    );
+    if (post == null) return const SizedBox.shrink();
+    return PostCard(
+      post: post,
+      author: author,
+      commentCount: commentCount,
+      onTap: () => context.push('/post/$postId'),
     );
   }
 }

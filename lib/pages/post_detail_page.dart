@@ -30,16 +30,16 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
   void _submitComment() {
     final text = _commentController.text.trim();
     if (text.isEmpty) return;
-    ref.read(boardProvider.notifier).addComment(widget.postId, text);
+    ref.read(boardActionsProvider.notifier).addComment(widget.postId, text);
     _commentController.clear();
     _focusNode.unfocus();
   }
 
   @override
   Widget build(BuildContext context) {
-    final post = ref.watch(postByIdProvider(widget.postId));
+    final post = ref.watch(postControllerProvider(widget.postId));
     final users = ref.watch(usersMapProvider);
-    final comments = ref.watch(commentsByPostProvider(widget.postId));
+    final commentIds = ref.watch(commentIdsByPostProvider(widget.postId));
 
     if (post == null) {
       return Scaffold(
@@ -91,10 +91,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                               ],
                             ),
                           ),
-                          Icon(
-                            Icons.chevron_right,
-                            color: cs.outlineVariant,
-                          ),
+                          Icon(Icons.chevron_right, color: cs.outlineVariant),
                         ],
                       ),
                     ),
@@ -125,19 +122,20 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                 Row(
                   children: [
                     _ActionButton(
-                      icon: isLiked
-                          ? Icons.favorite_rounded
-                          : Icons.favorite_border_rounded,
+                      icon:
+                          isLiked
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
                       label: '${post.likeCount}',
                       color: isLiked ? Colors.red : cs.outline,
                       onTap: () => ref
-                          .read(boardProvider.notifier)
-                          .toggleLike(widget.postId),
+                          .read(postControllerProvider(widget.postId).notifier)
+                          .toggleLike(),
                     ),
                     const SizedBox(width: 8),
                     _ActionButton(
                       icon: Icons.mode_comment_outlined,
-                      label: '${comments.length}',
+                      label: '${commentIds.length}',
                       color: cs.outline,
                       onTap: () => _focusNode.requestFocus(),
                     ),
@@ -149,12 +147,12 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
 
                 // 댓글 목록
                 Text(
-                  '댓글 ${comments.length}개',
+                  '댓글 ${commentIds.length}개',
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                if (comments.isEmpty)
+                if (commentIds.isEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24),
                     child: Center(
@@ -167,11 +165,8 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                     ),
                   )
                 else
-                  ...comments.map(
-                    (comment) => CommentItem(
-                      comment: comment,
-                      author: users[comment.authorId],
-                    ),
+                  ...commentIds.map(
+                    (id) => _CommentTile(key: ValueKey(id), commentId: id),
                   ),
               ],
             ),
@@ -211,6 +206,22 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
   }
 }
 
+/// 자신의 댓글 1건만 구독.
+/// 댓글이 더 이상 화면에 보이지 않으면 CommentController가 autoDispose된다.
+class _CommentTile extends ConsumerWidget {
+  const _CommentTile({super.key, required this.commentId});
+
+  final String commentId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final comment = ref.watch(commentControllerProvider(commentId));
+    if (comment == null) return const SizedBox.shrink();
+    final author = ref.watch(usersMapProvider)[comment.authorId];
+    return CommentItem(comment: comment, author: author);
+  }
+}
+
 class _ActionButton extends StatelessWidget {
   const _ActionButton({
     required this.icon,
@@ -237,9 +248,9 @@ class _ActionButton extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               label,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: color,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(color: color),
             ),
           ],
         ),

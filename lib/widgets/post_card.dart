@@ -15,6 +15,15 @@ class PostCard extends StatelessWidget {
     required this.onTap,
   });
 
+  static const tapKey = Key('postCardTap');
+  static const authorRowKey = Key('postCardAuthorRow');
+  static const authorNameKey = Key('postCardAuthorName');
+  static const createdAtKey = Key('postCardCreatedAt');
+  static const titleKey = Key('postCardTitle');
+  static const contentKey = Key('postCardContent');
+  static const likeCountKey = Key('postCardLikeCount');
+  static const commentCountKey = Key('postCardCommentCount');
+
   final Post post;
   final User? author;
   final int commentCount;
@@ -26,6 +35,7 @@ class PostCard extends StatelessWidget {
     final cs = theme.colorScheme;
 
     return InkWell(
+      key: tapKey,
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -34,11 +44,13 @@ class PostCard extends StatelessWidget {
           children: [
             if (author != null)
               Row(
+                key: authorRowKey,
                 children: [
                   UserAvatar(user: author!, radius: 12),
                   const SizedBox(width: 8),
                   Text(
                     author!.name,
+                    key: authorNameKey,
                     style: theme.textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -46,6 +58,7 @@ class PostCard extends StatelessWidget {
                   const SizedBox(width: 6),
                   Text(
                     post.createdAt.timeAgo,
+                    key: createdAtKey,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: cs.outline,
                     ),
@@ -55,6 +68,7 @@ class PostCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               post.title,
+              key: titleKey,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -64,6 +78,7 @@ class PostCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               post.content,
+              key: contentKey,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: cs.onSurfaceVariant,
               ),
@@ -74,11 +89,13 @@ class PostCard extends StatelessWidget {
             Row(
               children: [
                 _MetaChip(
+                  key: likeCountKey,
                   icon: Icons.favorite_border_rounded,
                   label: '${post.likeCount}',
                 ),
                 const SizedBox(width: 12),
                 _MetaChip(
+                  key: commentCountKey,
                   icon: Icons.mode_comment_outlined,
                   label: '$commentCount',
                 ),
@@ -92,7 +109,7 @@ class PostCard extends StatelessWidget {
 }
 
 class _MetaChip extends StatelessWidget {
-  const _MetaChip({required this.icon, required this.label});
+  const _MetaChip({super.key, required this.icon, required this.label});
 
   final IconData icon;
   final String label;

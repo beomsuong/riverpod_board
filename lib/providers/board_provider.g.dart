@@ -451,7 +451,7 @@ final class PostControllerProvider
   }
 }
 
-String _$postControllerHash() => r'3b3bf9ea1549c506af712be62218579b2ed70482';
+String _$postControllerHash() => r'c3aedbd85f23a87142c39e26ef7375d484a7c451';
 
 /// 본문 분산 캐시 — 글 1건.
 /// autoDispose 라 watch가 끊기는 순간 element/state 모두 사라진다.

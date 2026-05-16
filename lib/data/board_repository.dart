@@ -29,23 +29,39 @@ class BoardRepository {
   Post? fetchPost(String id) => _posts[id];
   Comment? fetchComment(String id) => _comments[id];
 
-  /// 정렬된(작성 순) 전체 글 ID 목록. 초기 인덱스 시드용.
-  List<String> listPostIds() => _posts.keys.toList();
+  /// 정렬된(작성 순) 전체 글 목록.
+  List<Post> fetchAllPosts() => _posts.values.toList();
 
-  /// 특정 작성자의 글 ID. 초기 인덱스 시드용.
-  List<String> listPostIdsByAuthor(String authorId) => [
+  /// 특정 작성자의 글 목록.
+  ///
+  /// 메모리 환경이라 캐시 hydrate가 no-op이지만, 실제 API 전환 시 여기서
+  /// `final posts = await api.get(...); for (final p in posts) hydratePost(p);`
+  /// 형태로 본문을 응답 한 번에 받아 캐시에 채워 N+1을 피한다.
+  List<Post> fetchPostsByAuthor(String authorId) => [
         for (final p in _posts.values)
-          if (p.authorId == authorId) p.id,
+          if (p.authorId == authorId) p,
       ];
 
-  /// 특정 글의 댓글 ID. 초기 인덱스 시드용.
-  List<String> listCommentIdsByPost(String postId) => [
+  /// 특정 글의 댓글 목록. fetch 시점에 본문도 동일하게 hydrate된다고 가정.
+  List<Comment> fetchCommentsByPost(String postId) => [
         for (final c in _comments.values)
-          if (c.postId == postId) c.id,
+          if (c.postId == postId) c,
       ];
 
+  /// 무조건 덮어쓰기 — 로컬 mutation(좋아요 등) 결과 반영용.
   void putPost(Post post) {
     _posts[post.id] = post;
+  }
+
+  /// 외부에서 받아온 데이터로 캐시를 갱신할 때 사용.
+  /// 캐시본이 더 최신이면 무시한다(stale-write 방어).
+  /// 같은 시각이면 incoming이 동일/구버전일 가능성이 있어 덮어쓰지 않는다.
+  void hydratePost(Post incoming) {
+    final cached = _posts[incoming.id];
+    if (cached == null ||
+        cached.effectiveUpdatedAt.isBefore(incoming.effectiveUpdatedAt)) {
+      _posts[incoming.id] = incoming;
+    }
   }
 
   void putComment(Comment comment) {

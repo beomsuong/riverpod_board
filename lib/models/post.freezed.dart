@@ -14,7 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Post {
 
- String get id; String get authorId; String get title; String get content; DateTime get createdAt; List<String> get likedUserIds;
+ String get id; String get authorId; String get title; String get content; DateTime get createdAt;/// 본문이 수정된 적이 없으면 null. 비교 시 [effectiveUpdatedAt] 사용.
+ DateTime? get updatedAt; List<String> get likedUserIds;
 /// Create a copy of Post
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +26,16 @@ $PostCopyWith<Post> get copyWith => _$PostCopyWithImpl<Post>(this as Post, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Post&&(identical(other.id, id) || other.id == id)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.likedUserIds, likedUserIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Post&&(identical(other.id, id) || other.id == id)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.likedUserIds, likedUserIds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,authorId,title,content,createdAt,const DeepCollectionEquality().hash(likedUserIds));
+int get hashCode => Object.hash(runtimeType,id,authorId,title,content,createdAt,updatedAt,const DeepCollectionEquality().hash(likedUserIds));
 
 @override
 String toString() {
-  return 'Post(id: $id, authorId: $authorId, title: $title, content: $content, createdAt: $createdAt, likedUserIds: $likedUserIds)';
+  return 'Post(id: $id, authorId: $authorId, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, likedUserIds: $likedUserIds)';
 }
 
 
@@ -45,7 +46,7 @@ abstract mixin class $PostCopyWith<$Res>  {
   factory $PostCopyWith(Post value, $Res Function(Post) _then) = _$PostCopyWithImpl;
 @useResult
 $Res call({
- String id, String authorId, String title, String content, DateTime createdAt, List<String> likedUserIds
+ String id, String authorId, String title, String content, DateTime createdAt, DateTime? updatedAt, List<String> likedUserIds
 });
 
 
@@ -62,14 +63,15 @@ class _$PostCopyWithImpl<$Res>
 
 /// Create a copy of Post
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? authorId = null,Object? title = null,Object? content = null,Object? createdAt = null,Object? likedUserIds = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? authorId = null,Object? title = null,Object? content = null,Object? createdAt = null,Object? updatedAt = freezed,Object? likedUserIds = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,authorId: null == authorId ? _self.authorId : authorId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,likedUserIds: null == likedUserIds ? _self.likedUserIds : likedUserIds // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,likedUserIds: null == likedUserIds ? _self.likedUserIds : likedUserIds // ignore: cast_nullable_to_non_nullable
 as List<String>,
   ));
 }
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String authorId,  String title,  String content,  DateTime createdAt,  List<String> likedUserIds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String authorId,  String title,  String content,  DateTime createdAt,  DateTime? updatedAt,  List<String> likedUserIds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Post() when $default != null:
-return $default(_that.id,_that.authorId,_that.title,_that.content,_that.createdAt,_that.likedUserIds);case _:
+return $default(_that.id,_that.authorId,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.likedUserIds);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.id,_that.authorId,_that.title,_that.content,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String authorId,  String title,  String content,  DateTime createdAt,  List<String> likedUserIds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String authorId,  String title,  String content,  DateTime createdAt,  DateTime? updatedAt,  List<String> likedUserIds)  $default,) {final _that = this;
 switch (_that) {
 case _Post():
-return $default(_that.id,_that.authorId,_that.title,_that.content,_that.createdAt,_that.likedUserIds);case _:
+return $default(_that.id,_that.authorId,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.likedUserIds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.id,_that.authorId,_that.title,_that.content,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String authorId,  String title,  String content,  DateTime createdAt,  List<String> likedUserIds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String authorId,  String title,  String content,  DateTime createdAt,  DateTime? updatedAt,  List<String> likedUserIds)?  $default,) {final _that = this;
 switch (_that) {
 case _Post() when $default != null:
-return $default(_that.id,_that.authorId,_that.title,_that.content,_that.createdAt,_that.likedUserIds);case _:
+return $default(_that.id,_that.authorId,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.likedUserIds);case _:
   return null;
 
 }
@@ -211,7 +213,7 @@ return $default(_that.id,_that.authorId,_that.title,_that.content,_that.createdA
 
 
 class _Post extends Post {
-  const _Post({required this.id, required this.authorId, required this.title, required this.content, required this.createdAt, final  List<String> likedUserIds = const []}): _likedUserIds = likedUserIds,super._();
+  const _Post({required this.id, required this.authorId, required this.title, required this.content, required this.createdAt, this.updatedAt, final  List<String> likedUserIds = const []}): _likedUserIds = likedUserIds,super._();
   
 
 @override final  String id;
@@ -219,6 +221,8 @@ class _Post extends Post {
 @override final  String title;
 @override final  String content;
 @override final  DateTime createdAt;
+/// 본문이 수정된 적이 없으면 null. 비교 시 [effectiveUpdatedAt] 사용.
+@override final  DateTime? updatedAt;
  final  List<String> _likedUserIds;
 @override@JsonKey() List<String> get likedUserIds {
   if (_likedUserIds is EqualUnmodifiableListView) return _likedUserIds;
@@ -237,16 +241,16 @@ _$PostCopyWith<_Post> get copyWith => __$PostCopyWithImpl<_Post>(this, _$identit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Post&&(identical(other.id, id) || other.id == id)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other._likedUserIds, _likedUserIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Post&&(identical(other.id, id) || other.id == id)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._likedUserIds, _likedUserIds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,authorId,title,content,createdAt,const DeepCollectionEquality().hash(_likedUserIds));
+int get hashCode => Object.hash(runtimeType,id,authorId,title,content,createdAt,updatedAt,const DeepCollectionEquality().hash(_likedUserIds));
 
 @override
 String toString() {
-  return 'Post(id: $id, authorId: $authorId, title: $title, content: $content, createdAt: $createdAt, likedUserIds: $likedUserIds)';
+  return 'Post(id: $id, authorId: $authorId, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, likedUserIds: $likedUserIds)';
 }
 
 
@@ -257,7 +261,7 @@ abstract mixin class _$PostCopyWith<$Res> implements $PostCopyWith<$Res> {
   factory _$PostCopyWith(_Post value, $Res Function(_Post) _then) = __$PostCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String authorId, String title, String content, DateTime createdAt, List<String> likedUserIds
+ String id, String authorId, String title, String content, DateTime createdAt, DateTime? updatedAt, List<String> likedUserIds
 });
 
 
@@ -274,14 +278,15 @@ class __$PostCopyWithImpl<$Res>
 
 /// Create a copy of Post
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? authorId = null,Object? title = null,Object? content = null,Object? createdAt = null,Object? likedUserIds = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? authorId = null,Object? title = null,Object? content = null,Object? createdAt = null,Object? updatedAt = freezed,Object? likedUserIds = null,}) {
   return _then(_Post(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,authorId: null == authorId ? _self.authorId : authorId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,likedUserIds: null == likedUserIds ? _self._likedUserIds : likedUserIds // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,likedUserIds: null == likedUserIds ? _self._likedUserIds : likedUserIds // ignore: cast_nullable_to_non_nullable
 as List<String>,
   ));
 }

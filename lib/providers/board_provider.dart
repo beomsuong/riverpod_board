@@ -22,21 +22,31 @@ Map<String, User> usersMap(Ref ref) {
 
 /// 정렬된 전체 글 ID 목록.
 /// 게시판 진입의 기준 인덱스라 keepAlive로 둔다.
+///
+/// fetch 시 본문 리스트를 한 번에 받아 repository에 hydrate되고, state엔
+/// ID만 보관한다. 본문은 `postControllerProvider(id)`가 캐시에서 꺼낸다.
 @Riverpod(keepAlive: true)
 class PostIds extends _$PostIds {
   @override
-  List<String> build() => ref.read(boardRepositoryProvider).listPostIds();
+  List<String> build() {
+    final posts = ref.read(boardRepositoryProvider).fetchAllPosts();
+    return [for (final p in posts) p.id];
+  }
 
   void prepend(String postId) => state = [postId, ...state];
 }
 
 /// 특정 작성자의 글 ID 목록. 프로필 페이지에서만 쓰이므로 autoDispose.
-/// 페이지를 떠나면 인덱스도 같이 사라진다. 다음 진입 시 repository에서 재시드.
+/// fetch 시 본문도 한 번에 받아 repository에 hydrate된다(N+1 회피).
 @riverpod
 class PostIdsByAuthor extends _$PostIdsByAuthor {
   @override
-  List<String> build(String authorId) =>
-      ref.read(boardRepositoryProvider).listPostIdsByAuthor(authorId);
+  List<String> build(String authorId) {
+    final posts = ref
+        .read(boardRepositoryProvider)
+        .fetchPostsByAuthor(authorId);
+    return [for (final p in posts) p.id];
+  }
 
   void prepend(String postId) => state = [postId, ...state];
 }
@@ -46,8 +56,12 @@ class PostIdsByAuthor extends _$PostIdsByAuthor {
 @riverpod
 class CommentIdsByPost extends _$CommentIdsByPost {
   @override
-  List<String> build(String postId) =>
-      ref.read(boardRepositoryProvider).listCommentIdsByPost(postId);
+  List<String> build(String postId) {
+    final comments = ref
+        .read(boardRepositoryProvider)
+        .fetchCommentsByPost(postId);
+    return [for (final c in comments) c.id];
+  }
 
   void append(String commentId) => state = [...state, commentId];
 }
@@ -69,6 +83,7 @@ class PostController extends _$PostController {
       likedUserIds: liked
           ? post.likedUserIds.where((id) => id != currentUserId).toList()
           : [...post.likedUserIds, currentUserId],
+      updatedAt: DateTime.now(),
     );
     ref.read(boardRepositoryProvider).putPost(updated);
     state = updated;
